@@ -5,6 +5,27 @@ import random
 class Design_Tools():
   """ Tools of inverse design """
 
+  def norm_part_coeff(part_coeff):
+    """ Normalize participation coefficients """
+
+    # Get the number of molecules in chemical space
+    num_mol = len(part_coeff)
+
+    # Calculate a sum of double of each participation coefficients
+    sum_double_part_coeff = 0
+    for i in range(num_mol):
+      sum_double_part_coeff += part_coeff[i] ** 2.0
+
+    # Set normalized participation coefficients
+    norm_part_coeff = np.zeros(num_mol)
+
+    # Calculate normalized participation coefficients
+    for i in range(num_mol):
+      norm_part_coeff[i] = (part_coeff[i] ** 2.0) / sum_double_part_coeff
+
+    return norm_part_coeff
+
+
   def gener_init_part_coeff(random_seed, num_mol):
     """ Generate inital participation coeffcients """
 
