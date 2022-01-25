@@ -86,5 +86,32 @@ class Design_Tools():
     return change_ratio
 
 
+  def get_scale_gradient(part_coeff, gradient):
+    """ Get a scale factor which leads to small change (<0.1) of the molecule in the line search """
+
+    # Calculate a scale factor of gradients in the line search
+    for i in range(10000):
+      # Set a scale factor of gradients in the line search
+      # At first iteration, scale_gradient is 1.0.
+      scale_gradient = 1.0 * (0.99 ** i)
+
+      # Calculate a change ratio of normalized participation coefficients
+      # by the linear search update
+      change_ratio = Design_Tools.calc_change_ratio(part_coeff, gradient, scale_gradient)
+
+      # If the change ratio of normalized participation coefficients is smaller than 0.1
+      if change_ratio <= 0.1:
+        break
+
+    if i == 9999:
+      raise ValueError("Gradients maybe too large and lead to large molecular change in the update.")
+
+    # Write scale
+    with open("scale_gradient.dat", mode='w') as fh:
+      print("iteration,", i, ", scale factor,", scale_gradient, file=fh)
+
+    return scale_gradient
+
+
 class Inverse_Design():
   """ Inverse design based on chemical space of geometrically relaxed molecules """
