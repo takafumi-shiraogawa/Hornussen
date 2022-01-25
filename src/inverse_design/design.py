@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 import random
+from opt import line_searcher
 
 class Design_Tools():
   """ Tools of inverse design """
@@ -50,6 +51,18 @@ class Design_Tools():
       init_part_coeff[i] = random.random()
 
     return init_part_coeff
+
+
+  def update_part_coeff(part_coeff, gradient):
+    """ Update participation coefficients by a line search """
+
+    # Perform the steepest descent line search
+    new_part_coeff = line_searcher.steepest_descent(part_coeff, gradient)
+
+    # Normalize new participation coefficients
+    norm_new_part_coeff = Design_Tools.norm_part_coeff(new_part_coeff)
+
+    return new_part_coeff, norm_new_part_coeff
 
 
 class Inverse_Design():
