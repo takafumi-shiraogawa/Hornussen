@@ -65,5 +65,26 @@ class Design_Tools():
     return new_part_coeff, norm_new_part_coeff
 
 
+  def calc_change_ratio(part_coeff, gradient, scale_gradient):
+    """ Calculate a sum of changes of normalized participation coefficients """
+
+    # Normalize participation coeffients
+    norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
+
+    # Perform the steepest descent line search
+    new_part_coeff, norm_new_part_coeff = Design_Tools.update_part_coeff(
+        part_coeff, gradient, scale_gradient)
+
+    # Get the number of molecules in chemical space
+    num_mol = len(part_coeff)
+
+    # Calculate a sum of changes of normalized participation coefficients
+    change_ratio = 0.0
+    for i in range(num_mol):
+      change_ratio += abs(norm_new_part_coeff[i] - norm_part_coeff[i])
+
+    return change_ratio
+
+
 class Inverse_Design():
   """ Inverse design based on chemical space of geometrically relaxed molecules """
