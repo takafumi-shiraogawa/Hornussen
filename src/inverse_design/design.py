@@ -26,8 +26,8 @@ class Design_Tools():
     return norm_part_coeff
 
 
-  def gener_init_part_coeff(random_seed, num_mol):
-    """ Generate inital participation coeffcients """
+  def gener_random_part_coeff(random_seed, num_mol):
+    """ Generate randomized participation coeffcients """
 
     # Set initial participation coefficients
     init_part_coeff = np.zeros(num_mol)
@@ -35,7 +35,7 @@ class Design_Tools():
     # Set random seed
     random.seed(random_seed)
 
-    # Generate randomized initial participation coefficients
+    # Generate randomized participation coefficients
     for i in range(num_mol):
       init_part_coeff[i] = random.random()
 
