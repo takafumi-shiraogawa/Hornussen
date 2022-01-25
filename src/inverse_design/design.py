@@ -26,6 +26,16 @@ class Design_Tools():
     return norm_part_coeff
 
 
+  def local_part_coeff(num_mol, target_mol):
+    """ Generate localized participation coefficients """
+
+    # Set localized participation coefficients
+    local_part_coeff = np.zeros(num_mol)
+    local_part_coeff[target_mol] = 10
+
+    return local_part_coeff
+
+
   def gener_random_part_coeff(random_seed, num_mol):
     """ Generate randomized participation coeffcients """
 
