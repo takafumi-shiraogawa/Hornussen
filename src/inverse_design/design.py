@@ -27,7 +27,7 @@ class Design_Tools():
     return norm_part_coeff
 
 
-  def local_part_coeff(num_mol, target_mol):
+  def gener_local_part_coeff(num_mol, target_mol):
     """ Generate localized participation coefficients """
 
     # Set localized participation coefficients
