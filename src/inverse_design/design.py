@@ -53,11 +53,12 @@ class Design_Tools():
     return init_part_coeff
 
 
-  def update_part_coeff(part_coeff, gradient):
+  def update_part_coeff(part_coeff, gradient, scale_gradient):
     """ Update participation coefficients by a line search """
 
     # Perform the steepest descent line search
-    new_part_coeff = line_searcher.steepest_descent(part_coeff, gradient)
+    new_part_coeff = line_searcher.steepest_descent(
+        part_coeff, gradient, scale_gradient)
 
     # Normalize new participation coefficients
     norm_new_part_coeff = Design_Tools.norm_part_coeff(new_part_coeff)
