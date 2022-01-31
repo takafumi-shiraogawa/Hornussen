@@ -116,3 +116,22 @@ class Design_Tools():
 
 class Inverse_Design():
   """ Inverse design based on chemical space of geometrically relaxed molecules """
+
+  def __init__(
+        self,
+        init_mol_geom_path = None,
+        target_mol_path = None
+    ):
+
+    if init_mol_geom_path == "None":
+      raise ValueError("design_init_mol_geom_path must be given in lime.conf.")
+
+    if target_mol_path == "None":
+      raise ValueError("design_target_mol_path must be given in lime.conf.")
+
+    self._init_mol_geom_path = init_mol_geom_path
+    self._target_mol_path = target_mol_path
+
+
+  def design(self):
+    """ Perform inverse design """
