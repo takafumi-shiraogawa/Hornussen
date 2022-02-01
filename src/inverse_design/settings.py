@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import configparser
+import os
 import apdft
 import apdft.math as apm
 
@@ -12,6 +13,10 @@ class Option:
       init_mol_geom_path : A string of the path for the molecular geometry.
       target_mol_path    : A string of the path for the list of target molecules.
     """
+    is_file = os.path.isfile('lime.conf')
+    if not is_file:
+      raise FileExistsError("lime.conf does not excist.")
+
     lime_conf = configparser.ConfigParser()
     lime_conf.read('lime.conf')
 
