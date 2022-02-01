@@ -62,20 +62,17 @@ Preprocessing
 3. Make an output target_molecules.inp of a list of target molecules which do not have
    equivalent molecules.
 
+4. Perform geometry optimization of a reference molecule by using an electronic structure
+   mothod which will be combined with APDFT and make mol.xyz with optimized geometry.
+
 
 Design
 -------------------
 
-1. Get a list of target molecules which do not have equivalent molecules.
-
-  In apdft.conf, apdft_readtargetpath should be specified, e.g.,
-  apdft_readtargetpath = /home/test/target_molecules.inp
-  target_molecules.inp has the structure:
-    6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
-    7,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
-    5,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
-    7,6,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
-
-  apdft.math reads target molecules from target_molecules.inp.
-  The target molecules are used through out design.
-  That is, target molecules depend on a reference geometry.
+1. Read inputs
+  All inputs of Lime is read by using a configuration file, lime.conf.
+    design_init_mol_geom_path  : path including the file name for an initial molecular geometry,
+                                 e.g., /home/test/benzene.xyz
+    design_target_mol_path     : path including the file name for a list of target molecules,
+                                 e.g., /home/test/target_molecules.inp. It can be generated using
+                                 modified APDFT.
