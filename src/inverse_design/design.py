@@ -119,18 +119,12 @@ class Inverse_Design():
 
   def __init__(
         self,
-        init_mol_geom_path = None,
-        target_mol_path = None
+        geom_coordinate = None,
+        mol_target_list = None
     ):
 
-    if init_mol_geom_path == "None":
-      raise ValueError("design_init_mol_geom_path must be given in lime.conf.")
-
-    if target_mol_path == "None":
-      raise ValueError("design_target_mol_path must be given in lime.conf.")
-
-    self._init_mol_geom_path = init_mol_geom_path
-    self._target_mol_path = target_mol_path
+    self._geom_coordinate = geom_coordinate
+    self._mol_target_list = mol_target_list
 
 
   def design(self):

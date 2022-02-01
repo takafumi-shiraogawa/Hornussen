@@ -4,8 +4,8 @@ import inverse_design.settings as iconf
 # from apdft.settings import Configuration
 
 def ignition():
-  conf1, conf2 = iconf.Option.get_options()
+  geom_coordinate, mol_target_list = iconf.Option.get_inputs()
 
-  derivatives = ds.Inverse_Design(conf1, conf2)
+  derivatives = ds.Inverse_Design(geom_coordinate, mol_target_list)
 
   derivatives.design()
