@@ -6,6 +6,12 @@ import apdft.math as apm
 class Option:
 
   def get_input_paths():
+    """ Get paths including input file names from the configuration file.
+
+    Returns:
+      init_mol_geom_path : A string of the path for the molecular geometry.
+      target_mol_path    : A string of the path for the list of target molecules.
+    """
     lime_conf = configparser.ConfigParser()
     lime_conf.read('lime.conf')
 
@@ -22,6 +28,13 @@ class Option:
 
 
   def get_inputs():
+    """ Get inputs for inverse design
+
+    Returns:
+      geom_coordinate : A (the number of molecules, 3) array of the molecular geometry. [Angstrom]
+      mol_target_list : A (the number of molecules, the number of atoms) array of the list of target molecules.
+                        It can be generated from modified APDFT.
+    """
     init_mol_geom_path, target_mol_path = Option.get_input_paths()
 
     # Read an initial geometry of a molecule in chemical space
