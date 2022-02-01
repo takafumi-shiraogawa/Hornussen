@@ -5,7 +5,7 @@ import apdft.math as apm
 
 class Option:
 
-  def get_options():
+  def get_input_paths():
     lime_conf = configparser.ConfigParser()
     lime_conf.read('lime.conf')
 
@@ -22,7 +22,7 @@ class Option:
 
 
   def get_inputs():
-    init_mol_geom_path, target_mol_path = Option.get_options()
+    init_mol_geom_path, target_mol_path = Option.get_input_paths()
 
     # Read an initial geometry of a molecule in chemical space
     try:
