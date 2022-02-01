@@ -3,5 +3,9 @@ Usage
 
 Code structure of Lime is described.
 
-Description
+Structure
 -------------------
+
+commandline.py
+  settings.py
+  design.py
