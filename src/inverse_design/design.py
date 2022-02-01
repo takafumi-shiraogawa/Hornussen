@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
 import numpy as np
 import random
-from opt import line_searcher
+from inverse_design.opt import line_searcher
 
 class Design_Tools():
   """ Tools of inverse design """
