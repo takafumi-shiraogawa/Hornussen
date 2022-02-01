@@ -140,6 +140,8 @@ class Inverse_Design():
     print(num_target_mol)
     print("")
 
+    ### 1. Generate participation coefficients
+
     # Get localized participation coefficients to a reference molecule
     part_coeff = Design_Tools.gener_local_part_coeff(num_target_mol, 0)
 
