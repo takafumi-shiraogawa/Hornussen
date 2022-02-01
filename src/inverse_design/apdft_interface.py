@@ -21,9 +21,9 @@ class APDFT_Proc():
   def read_potential_energies(self, path_potential_energies):
     """ Read potential energy of target molecules
     Args:
-      inp_potential_energy  : e.g., energies.csv
+      path_potential_energies  : A string of path of APDFT potential energies, e.g., /home/test/energies.csv
     Returns:
-      potential_energies    : potential energies of target molecules
+      potential_energies       : A (the number of molecules) array of potential energies of target molecules. [Hartree]
     """
     file_total_energies = open(path_potential_energies, "r")
     dict_total_energies = csv.DictReader(file_total_energies)
