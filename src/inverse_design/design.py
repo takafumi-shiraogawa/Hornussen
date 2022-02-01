@@ -122,6 +122,17 @@ class Design_Tools():
     return weight_property
 
 
+  def get_weight_atomic_forces(atomic_forces, norm_part_coeff):
+    """ Calculate weighted atomic forces """
+    num_atom = len(atomic_forces[0])
+    weight_atomic_force = np.zeros((num_atom, 3))
+    for i in range(num_atom):
+      for j in range(3):
+        weight_atomic_force[i, j] = np.multiply(atomic_forces[:, i, j], norm_part_coeff).sum()
+
+    return weight_atomic_force
+
+
 class Inverse_Design():
   """ Inverse design based on chemical space of geometrically relaxed molecules """
 
@@ -194,4 +205,12 @@ class Inverse_Design():
     # Check
     print("weight_energy")
     print(weight_energy)
+    print("")
+
+    ### 3.2. Calculate weighted atomic forces
+    weight_atomic_forces = Design_Tools.get_weight_atomic_forces(atomic_forces, norm_part_coeff)
+
+    # Check
+    print("weight_atomic_forces")
+    print(weight_atomic_forces)
     print("")
