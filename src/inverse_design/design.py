@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from ssl import ALERT_DESCRIPTION_BAD_CERTIFICATE_STATUS_RESPONSE
 import numpy as np
 import random
 from opt import line_searcher
@@ -129,3 +130,28 @@ class Inverse_Design():
 
   def design(self):
     """ Perform inverse design """
+
+    # Get the number of target molecules
+    num_target_mol = len(self._mol_target_list)
+
+    # Check
+    print("")
+    print("the number of target molecules")
+    print(num_target_mol)
+    print("")
+
+    # Get localized participation coefficients to a reference molecule
+    part_coeff = Design_Tools.gener_local_part_coeff(num_target_mol, 0)
+
+    # Check
+    print("initial part_coeff")
+    print(part_coeff)
+    print("")
+
+    # Normalize participation coefficients
+    norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
+
+    # Check
+    print("norm_part_coeff")
+    print(norm_part_coeff)
+    print("")

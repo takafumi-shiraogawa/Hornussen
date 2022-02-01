@@ -76,3 +76,5 @@ Design
     design_target_mol_path     : path including the file name for a list of target molecules,
                                  e.g., /home/test/target_molecules.inp. It can be generated using
                                  modified APDFT.
+
+2. Generate participation coefficients and normalized participation coefficients
