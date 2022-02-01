@@ -2,6 +2,7 @@
 import numpy as np
 import random
 from inverse_design.opt import line_searcher
+from inverse_design.apdft_interface import APDFT_Proc
 
 class Design_Tools():
   """ Tools of inverse design """
@@ -156,3 +157,13 @@ class Inverse_Design():
     print("norm_part_coeff")
     print(norm_part_coeff)
     print("")
+
+    ### 2. Calculate properties
+    ### 2.1. Read energies
+    apdft_proc = APDFT_Proc(num_target_mol)
+    # energies = APDFT_Proc.read_potential_energies("energies.csv")
+    energies = apdft_proc.read_potential_energies("energies.csv")
+
+    # Check
+    print("energies")
+    print(energies)
