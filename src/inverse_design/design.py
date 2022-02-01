@@ -127,23 +127,25 @@ class Inverse_Design():
     self._geom_coordinate = geom_coordinate
     self._mol_target_list = mol_target_list
 
+    # Get the number of target molecules
+    self._num_target_mol = len(self._mol_target_list)
+
+    # Get the number of atoms of a molecule
+    self._num_atom = len(self._geom_coordinate)
 
   def design(self):
     """ Perform inverse design """
 
-    # Get the number of target molecules
-    num_target_mol = len(self._mol_target_list)
-
     # Check
     print("")
     print("the number of target molecules")
-    print(num_target_mol)
+    print(self._num_target_mol)
     print("")
 
     ### 1. Generate participation coefficients
 
     # Get localized participation coefficients to a reference molecule
-    part_coeff = Design_Tools.gener_local_part_coeff(num_target_mol, 0)
+    part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, 0)
 
     # Check
     print("initial part_coeff")
@@ -160,7 +162,7 @@ class Inverse_Design():
 
     ### 2. Calculate properties
     ### 2.1. Read energies
-    apdft_proc = APDFT_Proc(num_target_mol)
+    apdft_proc = APDFT_Proc(self._num_target_mol)
     # energies = APDFT_Proc.read_potential_energies("energies.csv")
     energies = apdft_proc.read_potential_energies("energies.csv")
 
