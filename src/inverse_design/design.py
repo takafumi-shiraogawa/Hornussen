@@ -115,6 +115,13 @@ class Design_Tools():
     return scale_gradient
 
 
+  def get_weight_property(properties, norm_part_coeff):
+    """ Calculate weighted property """
+    weight_property = np.multiply(properties, norm_part_coeff).sum()
+
+    return weight_property
+
+
 class Inverse_Design():
   """ Inverse design based on chemical space of geometrically relaxed molecules """
 
@@ -177,4 +184,14 @@ class Inverse_Design():
     # Check
     print("atomic_forces")
     print(atomic_forces[:2])
+    print("")
+
+
+    ### 3. Calculate weighted properties
+    ### 3.1. Weighted potential energy
+    weight_energy = Design_Tools.get_weight_property(energies, norm_part_coeff)
+
+    # Check
+    print("weight_energy")
+    print(weight_energy)
     print("")
