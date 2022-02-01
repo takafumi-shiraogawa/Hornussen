@@ -188,7 +188,7 @@ class Inverse_Design():
 
 
     ### 3. Calculate weighted properties
-    ### 3.1. Weighted potential energy
+    ### 3.1. Calculate weighted potential energy
     weight_energy = Design_Tools.get_weight_property(energies, norm_part_coeff)
 
     # Check
