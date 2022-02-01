@@ -162,10 +162,19 @@ class Inverse_Design():
 
     ### 2. Calculate properties
     ### 2.1. Read energies
-    apdft_proc = APDFT_Proc(self._num_target_mol)
+    apdft_proc = APDFT_Proc(self._num_target_mol, self._num_atom)
     # energies = APDFT_Proc.read_potential_energies("energies.csv")
     energies = apdft_proc.read_potential_energies("energies.csv")
 
     # Check
     print("energies")
     print(energies)
+    print("")
+
+    ### 2.2. Read atomic forces
+    atomic_forces = apdft_proc.read_atomic_forces("ver_atomic_forces.csv")
+
+    # Check
+    print("atomic_forces")
+    print(atomic_forces[:2])
+    print("")
