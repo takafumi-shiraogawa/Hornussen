@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 import random
+from inverse_design.physics import Calc_Prop
 from inverse_design.opt import line_searcher
 from inverse_design.apdft_interface import APDFT_Proc
 
@@ -147,13 +148,17 @@ class Inverse_Design():
     self._geom_coordinate = geom_coordinate
     self._mol_target_list = mol_target_list
     self._design_target_property = design_target_property
-    self._free_atom_energies = free_atom_energies
 
     # Get the number of target molecules
     self._num_target_mol = len(self._mol_target_list)
 
     # Get the number of atoms of a molecule
     self._num_atom = len(self._geom_coordinate)
+
+    # Calculate sums of free atom energies of each molecule in chemical space
+    self._sum_free_atom_energies = Calc_Prop.calc_sum_free_atom_energies(
+        self._mol_target_list, free_atom_energies)
+
 
   def design(self):
     """ Perform inverse design """
@@ -170,8 +175,8 @@ class Inverse_Design():
     print("")
 
     # Check
-    print("free_atom_energies")
-    print(self._free_atom_energies)
+    print("sum_free_atom_energies")
+    print(self._sum_free_atom_energies)
     print("")
 
     ### 1. Generate participation coefficients
