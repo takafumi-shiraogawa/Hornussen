@@ -204,20 +204,6 @@ class Inverse_Design():
     print(atomic_forces[:2])
     print("")
 
-    ### 2.2. Read free atom energies
-    # with open('../../data/free_atom_energy/free_atom_energies.csv') as f:
-    # with open('../data/free_atom_energy/free_atom_energies.csv') as f:
-    #   print(f.read())
-    # print('basename:    ', os.path.basename(__file__))
-    # print('dirname:     ', os.path.dirname(__file__))
-    # data_path = os.path.dirname(__file__).replace('src/inverse_design', 'data/free_atom_energy')
-    # free_atom_energy_path = "%s%s" % (str(data_path), "/free_atom_energies.csv")
-    # print(data_path)
-    # print(free_atom_energy_path)
-    # print("")
-    
-    
-
 
     ### 3. Calculate weighted properties
     ### 3.1. Calculate weighted potential energy
