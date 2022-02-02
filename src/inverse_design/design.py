@@ -244,3 +244,11 @@ class Inverse_Design():
       print("atomization_energies")
       print(atomization_energies)
       print("")
+
+      ### 3.4. Calculate weighted atomization energy
+      weight_atomization_energy = Design_Tools.get_weight_property(atomization_energies, norm_part_coeff)
+
+      # Check
+      print("weight_atomization_energy")
+      print(weight_atomization_energy)
+      print("")
