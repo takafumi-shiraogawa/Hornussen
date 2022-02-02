@@ -140,11 +140,13 @@ class Inverse_Design():
         self,
         geom_coordinate = None,
         mol_target_list = None,
+        design_target_property = None,
         free_atom_energies = None
     ):
 
     self._geom_coordinate = geom_coordinate
     self._mol_target_list = mol_target_list
+    self._design_target_property = design_target_property
     self._free_atom_energies = free_atom_energies
 
     # Get the number of target molecules
@@ -160,6 +162,11 @@ class Inverse_Design():
     print("")
     print("the number of target molecules")
     print(self._num_target_mol)
+    print("")
+
+    # Check
+    print("design_target_property")
+    print(self._design_target_property)
     print("")
 
     # Check

@@ -33,6 +33,27 @@ class Option:
     return init_mol_geom_path, target_mol_path
 
 
+  def get_input_design():
+    """ Get an input for design from the configuration file.
+
+    Returns:
+      design_target_property : A string of the target property to be designed.
+    """
+    is_file = os.path.isfile('lime.conf')
+    if not is_file:
+      raise FileExistsError("lime.conf does not excist.")
+
+    lime_conf = configparser.ConfigParser()
+    lime_conf.read('lime.conf')
+
+    design_target_property = lime_conf['design']['design_target_property']
+
+    if design_target_property not in ['atomization_energy']:
+      raise ValueError("design_target_property must be atomization_energy in lime.conf.")
+
+    return design_target_property
+
+
   def get_free_atom_energies():
     path_data = os.path.dirname(__file__).replace('src/inverse_design', 'data')
     path_free_atom_energies = "%s%s" % (str(path_data), "/free_atom_energies.csv")
