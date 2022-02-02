@@ -233,3 +233,14 @@ class Inverse_Design():
     print("weight_atomic_forces")
     print(weight_atomic_forces)
     print("")
+
+    # If the target property to be designed is atomization energy
+    if self._design_target_property == 'atomization_energy':
+
+      ### 3.3. Calculate atomization energies
+      atomization_energies = Calc_Prop.calc_atomization_energies(energies, self._sum_free_atom_energies)
+
+      # Check
+      print("atomization_energies")
+      print(atomization_energies)
+      print("")
