@@ -139,11 +139,13 @@ class Inverse_Design():
   def __init__(
         self,
         geom_coordinate = None,
-        mol_target_list = None
+        mol_target_list = None,
+        free_atom_energies = None
     ):
 
     self._geom_coordinate = geom_coordinate
     self._mol_target_list = mol_target_list
+    self._free_atom_energies = free_atom_energies
 
     # Get the number of target molecules
     self._num_target_mol = len(self._mol_target_list)
@@ -158,6 +160,11 @@ class Inverse_Design():
     print("")
     print("the number of target molecules")
     print(self._num_target_mol)
+    print("")
+
+    # Check
+    print("free_atom_energies")
+    print(self._free_atom_energies)
     print("")
 
     ### 1. Generate participation coefficients
@@ -196,6 +203,20 @@ class Inverse_Design():
     print("atomic_forces")
     print(atomic_forces[:2])
     print("")
+
+    ### 2.2. Read free atom energies
+    # with open('../../data/free_atom_energy/free_atom_energies.csv') as f:
+    # with open('../data/free_atom_energy/free_atom_energies.csv') as f:
+    #   print(f.read())
+    # print('basename:    ', os.path.basename(__file__))
+    # print('dirname:     ', os.path.dirname(__file__))
+    # data_path = os.path.dirname(__file__).replace('src/inverse_design', 'data/free_atom_energy')
+    # free_atom_energy_path = "%s%s" % (str(data_path), "/free_atom_energies.csv")
+    # print(data_path)
+    # print(free_atom_energy_path)
+    # print("")
+    
+    
 
 
     ### 3. Calculate weighted properties
