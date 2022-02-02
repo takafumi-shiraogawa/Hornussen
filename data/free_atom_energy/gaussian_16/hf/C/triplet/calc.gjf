@@ -1,0 +1,9 @@
+%nprocshared=6
+%mem=10GB
+# hf/def2tzvp stable=opt
+
+C
+
+0 3
+C 0.0 0.0 0.0
+

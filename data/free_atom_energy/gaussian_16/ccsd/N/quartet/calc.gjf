@@ -1,0 +1,9 @@
+%nprocshared=6
+%mem=10GB
+# ccsd/def2tzvp
+
+N
+
+0 4
+N 0.0 0.0 0.0
+
