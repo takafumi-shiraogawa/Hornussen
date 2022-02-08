@@ -297,9 +297,9 @@ class Inverse_Design():
 
     ### 3.6. Calculate scaled variables by the scale factors D with the damping coefficient
     ###      in optimality criteria method
-    scaled_part_coeff = optimality_criteria.calc_scaled_variables(norm_part_coeff, scale_factors_D)
+    scaled_norm_part_coeff = optimality_criteria.calc_scaled_variables(norm_part_coeff, scale_factors_D)
 
     # Check
-    print("scaled_part_coeff")
-    print(scaled_part_coeff)
+    print("scaled_norm_part_coeff")
+    print(scaled_norm_part_coeff)
     print("")
