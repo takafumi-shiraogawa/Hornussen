@@ -288,7 +288,7 @@ class Inverse_Design():
 
     ### 3.5. Calculate scale factors D for optimality criteria method
     scale_factors_D = optimality_criteria.calc_scale_factor(
-        norm_part_coeff, atomization_energies, 10.0, 3.0)
+        norm_part_coeff, -atomization_energies, 10.0, 3.0)
 
     # Check
     print("scale_factors_D")
