@@ -2,7 +2,7 @@
 import numpy as np
 import random
 from inverse_design.physics import Calc_Prop
-from inverse_design.opt import line_searcher
+from inverse_design.opt import line_searcher, optimality_criteria
 from inverse_design.apdft_interface import APDFT_Proc
 
 class Design_Tools():
@@ -285,3 +285,12 @@ class Inverse_Design():
     # print("weight_atomization_energy_gradient")
     # print(weight_atomization_energy_gradient)
     # print("")
+
+    ### 3.5. Calculate scale factors D for optimality criteria method
+    scale_factors_D = optimality_criteria.calc_scale_factor(
+        norm_part_coeff, atomization_energies, 10.0, 3.0)
+
+    # Check
+    print("scale_factors_D")
+    print(scale_factors_D)
+    print("")
