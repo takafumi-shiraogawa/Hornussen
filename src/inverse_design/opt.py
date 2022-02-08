@@ -36,3 +36,11 @@ class optimality_criteria():
       A N array of the scale factor D.
     """
     return np.multiply(variables ** (penalty_factor - 1.0), object_functions) * penalty_factor / multiplier
+
+
+  def calc_scaled_variables(variables, scale_factors_D, damp_factor = 0.5):
+    """ Calculate scaled variables by the scale factors D with the damping coefficient. """
+    if damp_factor == 0.5:
+      return np.multiply(np.sqrt(scale_factors_D), variables)
+    else:
+      return np.multiply(scale_factors_D ** damp_factor, variables)
