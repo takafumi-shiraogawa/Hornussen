@@ -116,9 +116,9 @@ class Design_Tools():
     return scale_gradient
 
 
-  def get_weight_property(properties, norm_part_coeff):
+  def get_weight_property(properties, norm_part_coeff, penalty_factor = 1.0):
     """ Calculate weighted property """
-    weight_property = np.multiply(properties, norm_part_coeff).sum()
+    weight_property = np.sum(np.multiply(properties, np.power(norm_part_coeff, penalty_factor)))
 
     return weight_property
 
