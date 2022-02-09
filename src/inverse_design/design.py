@@ -134,28 +134,28 @@ class Design_Tools():
     return weight_atomic_force
 
 
-  # def get_weight_property_gradient(properties, part_coeff):
-  #   """ Calculate weighted property gradient
-  #   Args:
-  #     properties : A (the number of molecules) array of properties of target molecules.
-  #     part_coeff : A (the number of molecules) array of participation coefficients, not normalized one.
-  #   Returns:
-  #     weight_property_gradient : A (the number of molecules) array of gradients of properties
-  #                                with respect to participation coefficients, not normalized one.
-  #   """
-  #   num_mol = len(properties)
-  #   weight_property_gradient = np.zeros(num_mol)
+  def get_weight_property_gradient(properties, part_coeff):
+    """ Calculate weighted property gradient
+    Args:
+      properties : A (the number of molecules) array of properties of target molecules.
+      part_coeff : A (the number of molecules) array of participation coefficients, not normalized one.
+    Returns:
+      weight_property_gradient : A (the number of molecules) array of gradients of properties
+                                 with respect to participation coefficients, not normalized one.
+    """
+    num_mol = len(properties)
+    weight_property_gradient = np.zeros(num_mol)
 
-  #   double_sum_double_part_coeff = (np.sum(np.square(part_coeff))) ** 2.0
+    double_sum_double_part_coeff = (np.sum(np.square(part_coeff))) ** 2.0
 
-  #   for i in range(num_mol):
+    for i in range(num_mol):
 
-  #     double_weight_property_diff = np.sum(np.multiply(properties[i] - properties, np.square(part_coeff)))
+      double_weight_property_diff = np.sum(np.multiply(properties[i] - properties, np.square(part_coeff)))
 
-  #     weight_property_gradient[i] = -2.0 * part_coeff[i] * \
-  #         (double_weight_property_diff / double_sum_double_part_coeff)
+      weight_property_gradient[i] = -2.0 * part_coeff[i] * \
+          (double_weight_property_diff / double_sum_double_part_coeff)
 
-  #   return weight_property_gradient
+    return weight_property_gradient
 
 
 class Inverse_Design():
@@ -277,14 +277,14 @@ class Inverse_Design():
       print(weight_atomization_energy)
       print("")
 
-    # ### 3.4. Calculate gradients of atomization energies with respect to participation coefficients
-    # weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
-    #     atomization_energies, part_coeff)
+    ### 3.4. Calculate gradients of atomization energies with respect to participation coefficients
+    weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
+        atomization_energies, part_coeff)
 
-    # # Check
-    # print("weight_atomization_energy_gradient")
-    # print(weight_atomization_energy_gradient)
-    # print("")
+    # Check
+    print("weight_atomization_energy_gradient")
+    print(weight_atomization_energy_gradient)
+    print("")
 
     # ### 3.5. Calculate scale factors D for optimality criteria method
     # scale_factors_D = optimality_criteria.calc_scale_factor(

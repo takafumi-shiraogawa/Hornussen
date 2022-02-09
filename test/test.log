@@ -73,3 +73,6 @@ atomization_energies
 weight_atomization_energy
 -116.5955938748346
 
+weight_atomization_energy_gradient
+[-0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.]
+
