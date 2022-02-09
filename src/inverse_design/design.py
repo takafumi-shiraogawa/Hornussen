@@ -288,7 +288,7 @@ class Inverse_Design():
 
     ### 3.5. Calculate scale factors D for optimality criteria method
     scale_factors_D = optimality_criteria.calc_scale_factor(
-        norm_part_coeff, -atomization_energies, 10.0, 3.0)
+        norm_part_coeff, -atomization_energies, 500.0, 3.0)
 
     # Check
     print("scale_factors_D")
@@ -302,4 +302,13 @@ class Inverse_Design():
     # Check
     print("scaled_norm_part_coeff")
     print(scaled_norm_part_coeff)
+    print("")
+
+    ### 3.7. Get updated variables
+    updated_norm_part_coeff = optimality_criteria.update_variables(
+        norm_part_coeff, scaled_norm_part_coeff)
+
+    # Check
+    print("updated_norm_part_coeff")
+    print(updated_norm_part_coeff)
     print("")

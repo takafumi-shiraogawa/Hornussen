@@ -44,3 +44,23 @@ class optimality_criteria():
       return np.multiply(np.sqrt(scale_factors_D), variables)
     else:
       return np.multiply(scale_factors_D ** damp_factor, variables)
+
+
+  def update_variables(variables, scaled_variables):
+    """ Update variables. """
+    # Set allowable change in each variable
+    # This value is obtained from O. Sigmund, A 99 line topology optimization code
+    # written in Matlab, 2001.
+    allow_change = 0.2
+
+    for i in range(len(variables)):
+      if scaled_variables[i] <= max(0.0, variables[i] - allow_change):
+        variables[i] = max(0.0, variables[i] - allow_change)
+      elif scaled_variables[i] >= min(1.0, variables[i] + allow_change):
+        variables[i] = min(1.0, variables[i] + allow_change)
+      elif scaled_variables[i] > max(0.0, variables[i] - allow_change) and scaled_variables[i] < min(1.0, variables[i] + allow_change):
+        variables[i] = scaled_variables[i]
+      else:
+        raise Exception("Strange behavior!")
+
+    return variables
