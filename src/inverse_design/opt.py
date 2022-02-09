@@ -15,11 +15,7 @@ class line_searcher():
 		Returns:
 			next_variable: A N array of updated variables
 		"""
-    next_variable = np.zeros(len(variable))
-    for i in range(len(variable)):
-      next_variable[i] = variable[i] - (grad_scale_factor * gradient[i])
-
-    return next_variable
+    return variable - grad_scale_factor * gradient
 
 
 class optimality_criteria():
