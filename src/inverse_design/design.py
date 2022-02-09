@@ -343,7 +343,9 @@ class Inverse_Design():
     # print(updated_norm_part_coeff)
     # print("")
 
-    ### 3.6. Perturb participation coefficients
+
+    ### 4. Perturb the molecule and calculate weighted properties
+    ### 4.1. Calculate weighted potential energy
     part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
 
     # Check
@@ -355,7 +357,7 @@ class Inverse_Design():
     print(norm_part_coeff.sum())
     print("")
 
-    ### 3.7. Calculate weighted atomization energy
+    ### 4.1. Calculate weighted atomization energy
     weight_atomization_energy = Design_Tools.get_weight_property(atomization_energies, norm_part_coeff)
 
     # Check
@@ -363,7 +365,7 @@ class Inverse_Design():
     print(weight_atomization_energy)
     print("")
 
-    ### 3.8. Calculate gradients of atomization energies with respect to participation coefficients
+    ### 4.2. Calculate gradients of atomization energies with respect to participation coefficients
     weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
         atomization_energies, part_coeff)
 
