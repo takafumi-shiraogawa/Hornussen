@@ -11,6 +11,27 @@ class Design_Tools():
   def norm_part_coeff(part_coeff):
     """ Normalize participation coefficients """
 
+    # Get the number of molecules in chemical space
+    num_mol = len(part_coeff)
+
+    # Calculate a sum of double of each participation coefficients
+    sum_double_part_coeff = 0
+    for i in range(num_mol):
+      sum_double_part_coeff += part_coeff[i] ** 2.0
+
+    # Set normalized participation coefficients
+    norm_part_coeff = np.zeros(num_mol)
+
+    # Calculate normalized participation coefficients
+    for i in range(num_mol):
+      norm_part_coeff[i] = (part_coeff[i] ** 2.0) / sum_double_part_coeff
+
+    return norm_part_coeff
+
+
+  def sin_norm_part_coeff(part_coeff):
+    """ Normalize participation coefficients """
+
     # Calculate a sum of double of sin of each participation coefficients
     sum_double_sin_part_coeff = np.sum(np.square(np.sin(part_coeff)))
 
@@ -18,26 +39,6 @@ class Design_Tools():
     norm_part_coeff = np.square(np.sin(part_coeff)) / sum_double_sin_part_coeff
 
     return norm_part_coeff
-
-  # def norm_part_coeff(part_coeff):
-  #   """ Normalize participation coefficients """
-
-  #   # Get the number of molecules in chemical space
-  #   num_mol = len(part_coeff)
-
-  #   # Calculate a sum of double of each participation coefficients
-  #   sum_double_part_coeff = 0
-  #   for i in range(num_mol):
-  #     sum_double_part_coeff += part_coeff[i] ** 2.0
-
-  #   # Set normalized participation coefficients
-  #   norm_part_coeff = np.zeros(num_mol)
-
-  #   # Calculate normalized participation coefficients
-  #   for i in range(num_mol):
-  #     norm_part_coeff[i] = (part_coeff[i] ** 2.0) / sum_double_part_coeff
-
-  #   return norm_part_coeff
 
 
   def gener_local_part_coeff(num_mol, target_mol):
