@@ -286,29 +286,29 @@ class Inverse_Design():
     # print(weight_atomization_energy_gradient)
     # print("")
 
-    ### 3.5. Calculate scale factors D for optimality criteria method
-    scale_factors_D = optimality_criteria.calc_scale_factor(
-        norm_part_coeff, -atomization_energies, 500.0, 3.0)
+    # ### 3.5. Calculate scale factors D for optimality criteria method
+    # scale_factors_D = optimality_criteria.calc_scale_factor(
+    #     norm_part_coeff, -atomization_energies, 500.0, 3.0)
 
-    # Check
-    print("scale_factors_D")
-    print(scale_factors_D)
-    print("")
+    # # Check
+    # print("scale_factors_D")
+    # print(scale_factors_D)
+    # print("")
 
-    ### 3.6. Calculate scaled variables by the scale factors D with the damping coefficient
-    ###      in optimality criteria method
-    scaled_norm_part_coeff = optimality_criteria.calc_scaled_variables(norm_part_coeff, scale_factors_D)
+    # ### 3.6. Calculate scaled variables by the scale factors D with the damping coefficient
+    # ###      in optimality criteria method
+    # scaled_norm_part_coeff = optimality_criteria.calc_scaled_variables(norm_part_coeff, scale_factors_D)
 
-    # Check
-    print("scaled_norm_part_coeff")
-    print(scaled_norm_part_coeff)
-    print("")
+    # # Check
+    # print("scaled_norm_part_coeff")
+    # print(scaled_norm_part_coeff)
+    # print("")
 
-    ### 3.7. Get updated variables
-    updated_norm_part_coeff = optimality_criteria.update_variables(
-        norm_part_coeff, scaled_norm_part_coeff)
+    # ### 3.7. Get updated variables
+    # updated_norm_part_coeff = optimality_criteria.update_variables(
+    #     norm_part_coeff, scaled_norm_part_coeff)
 
-    # Check
-    print("updated_norm_part_coeff")
-    print(updated_norm_part_coeff)
-    print("")
+    # # Check
+    # print("updated_norm_part_coeff")
+    # print(updated_norm_part_coeff)
+    # print("")
