@@ -81,7 +81,7 @@ class Design_Tools():
     return np.sum(np.abs(old_norm_part_coeff - new_norm_part_coeff))
 
 
-  def update_part_coeff(part_coeff, gradient, scale_gradient):
+  def update_part_coeff(part_coeff, gradient, scale_gradient = 1.0):
     """ Update participation coefficients by a line search """
 
     # Perform the steepest descent line search
@@ -374,4 +374,18 @@ class Inverse_Design():
     # Check
     print("weight_atomization_energy_gradient")
     print(weight_atomization_energy_gradient)
+    print("")
+
+
+    ### 5. Update participation coefficients
+    part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
+        part_coeff, weight_atomization_energy_gradient)
+
+    # Check
+    print("part_coeff")
+    print(part_coeff)
+    print("")
+    print("norm_part_coeff")
+    print(norm_part_coeff)
+    print(np.sum(norm_part_coeff))
     print("")
