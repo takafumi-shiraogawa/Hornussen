@@ -55,6 +55,18 @@ class Design_Tools():
     return init_part_coeff
 
 
+  def perturb_part_coeff(part_coeff, perturb_param = 0.05):
+    """ Perturb participation coefficients """
+
+    # Perturb participation coefficients
+    new_part_coeff = part_coeff[:] + perturb_param
+
+    # Normalize new participation coefficients
+    new_norm_part_coeff = Design_Tools.norm_part_coeff(new_part_coeff)
+
+    return new_part_coeff, new_norm_part_coeff
+
+
   def update_part_coeff(part_coeff, gradient, scale_gradient):
     """ Update participation coefficients by a line search """
 
@@ -312,3 +324,15 @@ class Inverse_Design():
     # print("updated_norm_part_coeff")
     # print(updated_norm_part_coeff)
     # print("")
+
+    ### Perturb participation coefficients
+    part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
+
+    # Check
+    print("part_coeff")
+    print(part_coeff)
+    print("")
+    print("norm_part_coeff")
+    print(norm_part_coeff)
+    print(norm_part_coeff.sum())
+    print("")
