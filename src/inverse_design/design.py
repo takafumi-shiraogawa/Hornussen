@@ -85,6 +85,13 @@ class Design_Tools():
     return new_part_coeff, new_norm_part_coeff
 
 
+  def get_change_norm_part_coeff(old_norm_part_coeff, new_norm_part_coeff):
+    """ Estimate a change of normalized participation coefficients """
+
+    # Calculate a sum of changes of normalized participation coefficients
+    return np.sum(np.abs(old_norm_part_coeff - new_norm_part_coeff))
+
+
   def update_part_coeff(part_coeff, gradient, scale_gradient):
     """ Update participation coefficients by a line search """
 
@@ -346,6 +353,9 @@ class Inverse_Design():
 
     ### 4. Perturb the molecule and calculate weighted properties
     ### 4.1. Calculate weighted potential energy
+    # Save for check change of normalized participation coefficients
+    temp_norm_part_coeff = np.copy(norm_part_coeff)
+
     part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
 
     # Check
@@ -355,6 +365,9 @@ class Inverse_Design():
     print("norm_part_coeff")
     print(norm_part_coeff)
     print(norm_part_coeff.sum())
+    print("")
+    print("change of normalized participation coefficients")
+    print(Design_Tools.get_change_norm_part_coeff(temp_norm_part_coeff, norm_part_coeff))
     print("")
 
     ### 4.1. Calculate weighted atomization energy
