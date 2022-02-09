@@ -289,7 +289,7 @@ class Inverse_Design():
       print(weight_atomization_energy)
       print("")
 
-    ### 3.4. Calculate gradients of atomization energies with respect to participation coefficients
+    ### 3.5. Calculate gradients of atomization energies with respect to participation coefficients
     weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
         atomization_energies, part_coeff)
 
@@ -325,7 +325,7 @@ class Inverse_Design():
     # print(updated_norm_part_coeff)
     # print("")
 
-    ### Perturb participation coefficients
+    ### 3.6. Perturb participation coefficients
     part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
 
     # Check
