@@ -67,8 +67,14 @@ class Design_Tools():
     return init_part_coeff
 
 
-  def perturb_part_coeff(part_coeff, perturb_param = 0.05):
+  def perturb_part_coeff(part_coeff, perturb_param = None):
     """ Perturb participation coefficients """
+
+    # If the perturbation parameter is not given
+    if perturb_param == None:
+      # Get the perturbation parameter
+      # 1% of the participation coefficients is distributed to all candidates
+      perturb_param = np.sum(part_coeff) * 0.01 / len(part_coeff)
 
     # Perturb participation coefficients
     new_part_coeff = part_coeff[:] + perturb_param
