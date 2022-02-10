@@ -8,9 +8,9 @@ Flowchart
 -------------------
 
 1. Preprocessing
-  1.1. Get a list of target molecules (target_molecules.inp) by APDFT.
+  1.1. Get a list of target molecules (target_molecules.inp) by modified APDFT.
   1.2. Geometry optimization of the reference molecule by electronic structure theory
-       to be used in APDFT.
+       to be used in modified APDFT.
 
 
 Preprocessing
