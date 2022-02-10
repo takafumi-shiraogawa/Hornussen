@@ -23,6 +23,11 @@ Flowchart
   2.3.3. Update participation coefficients.
   2.3.4. Back to 2.3.1.
 
+TODO:
+1. APDFT geometry optimization with arbitrary (normalized) participation coefficients.
+2. Set outputs. What should be outputs?
+
+
 
 Preprocessing
 -------------------
