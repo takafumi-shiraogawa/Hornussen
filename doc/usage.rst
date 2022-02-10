@@ -73,7 +73,7 @@ Preprocessing
    equivalent molecules.
 
 4. Perform geometry optimization of a reference molecule by using an electronic structure
-   mothod which will be combined with APDFT and make mol.xyz with optimized geometry.
+   method which will be combined with APDFT and make mol.xyz with optimized geometry.
 
 
 Design
