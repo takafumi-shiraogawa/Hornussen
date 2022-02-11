@@ -1,5 +1,7 @@
 import csv
 import numpy as np
+from apdft.ase.ase_opt import ASE_OPT
+from apdft.ase.ase_apdft import mod_APDFT
 
 
 def get_property_values(property_name, dict, num_mol, apdft_order = 1):
@@ -54,3 +56,11 @@ class APDFT_Proc():
         file_atomic_forces.close()
 
     return atomic_forces
+
+
+class ASE_APDFT_Interface(mod_APDFT):
+  """ APDFT-ASE calculators interface of APDFT for Lime's inverse design. """
+
+
+class ASE_OPT_Interface(ASE_OPT):
+  """ APDFT-ASE geometry optimization interface of APDFT for Lime's inverse design. """
