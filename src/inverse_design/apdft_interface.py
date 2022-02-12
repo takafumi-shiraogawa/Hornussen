@@ -9,6 +9,15 @@ import apdft.ase.ase_apdft as APDFT
 from apdft.ase.ase_opt import ASE_OPT
 
 
+# Conversion factor from Angstrom to Bohr
+ang_to_bohr = 1 / 0.52917721067
+# Conversion factor from hartree to eV
+har_to_ev = 27.21162
+
+# Hartree / Bohr to eV / Angstrom
+hb_to_ea = har_to_ev * ang_to_bohr
+
+
 def get_property_values(property_name, dict, num_mol, apdft_order = 1):
   """ Read property values """
   property_values = np.zeros(num_mol)
@@ -66,6 +75,76 @@ class APDFT_Proc():
 class ASE_APDFT_Interface(APDFT.mod_APDFT):
   """ APDFT-ASE calculators interface of APDFT for Lime's inverse design. """
 
+  # Read calculated energy and atomic forces
+  def read_results(self):
+    path = 'work/temp'
+
+    # Set information on outputs of the APDFT calculation
+    inp_total_energy = open("%s/energies.csv" % path, "r")
+    inp_atomic_force = open("%s/ver_atomic_forces.csv" % path, "r")
+
+    # Open the inputs
+    dict_total_energy = csv.DictReader(inp_total_energy)
+    dict_atomic_force = csv.DictReader(inp_atomic_force)
+
+    num_atoms = len(self.atoms.positions)
+
+    pot_energy = 0
+    atom_forces = np.zeros((num_atoms, 3))
+
+    apdft_order = 1
+
+    # Obtain results
+    pot_energy = APDFT.handle_APDFT.get_target_value(
+        "total_energy_order", dict_total_energy, apdft_order)
+
+    # In full and one-dimensional (z) Cartesian coordinate calculations,
+    # outputs of atomic forces are different.
+    # In the one-dimensional calculation, APDFT only calculate z-component
+    # atomic forces.
+    # According to the difference, when the one-dimensional (z) coordinate
+    # calculation is performed, only z-direction force is read for
+    # geometry optimization.
+    # For full-dimensional Cartesian optimization
+    for i in range(num_atoms):
+      for didx, dim in enumerate("xyz"):
+        try:
+          atom_forces[i, didx] = APDFT.handle_APDFT.get_target_value(
+              "ver_atomic_force_%s_%s_order" % (str(i), dim), dict_atomic_force, apdft_order)
+        except FileNotFoundError:
+          print(FileNotFoundError)
+        except KeyError:
+          # For z-Cartesian component
+          if didx == 2:
+            inp_atomic_force.close()
+            inp_atomic_force = open("%s/ver_atomic_forces.csv" % path, "r")
+            dict_atomic_force = csv.DictReader(inp_atomic_force)
+            atom_forces[i, 2] = APDFT.handle_APDFT.get_target_value(
+              "ver_atomic_force_%s_order" % str(i), dict_atomic_force, apdft_order)
+          # For x- and y-Cartesian components
+          else:
+            atom_forces[i, didx] = 0.0
+        inp_atomic_force.close()
+        inp_atomic_force = open("%s/ver_atomic_forces.csv" % path, "r")
+        dict_atomic_force = csv.DictReader(inp_atomic_force)
+
+    inp_total_energy.close()
+    inp_atomic_force.close()
+
+    print("APDFT results:", self.num_opt_step, pot_energy)
+    for i in range(num_atoms):
+      print("APDFT geometry:", self.num_opt_step, self.atoms.positions[i, :])
+    print("APDFT geometry:")
+
+    self.results = {'energy': pot_energy * har_to_ev,
+                    'forces': atom_forces * hb_to_ea,
+                    'stress': np.zeros(6),
+                    'dipole': np.zeros(3),
+                    'charges': np.zeros(num_atoms),
+                    'magmom': 0.0,
+                    'magmoms': np.zeros(num_atoms)}
+    APDFT.handle_APDFT.save_results(self.num_opt_step)
+
 
 class ASE_OPT_Interface(ASE_OPT):
   """ APDFT-ASE geometry optimization interface of APDFT for Lime's inverse design. """
@@ -79,16 +158,6 @@ class ASE_OPT_Interface(ASE_OPT):
 
     Args:
     """
-
-    # Conversion factor from Angstrom to Bohr
-    ang_to_bohr = 1 / 0.52917721067
-    # Conversion factor from hartree to eV
-    har_to_ev = 27.21162
-
-    # Hartree / Bohr to eV / Angstrom
-    hb_to_ea = har_to_ev * ang_to_bohr
-
-
     start = time.time()
 
     # coordinates of init.xyz should be in Angstrom.
