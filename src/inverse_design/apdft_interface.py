@@ -1,7 +1,12 @@
 import csv
 import numpy as np
+import time
+from ase import Atoms
+# from ase.optimize import BFGS
+from ase.optimize.bfgslinesearch import BFGSLineSearch
+import apdft as APDFTtool
+import apdft.ase.ase_apdft as APDFT
 from apdft.ase.ase_opt import ASE_OPT
-from apdft.ase.ase_apdft import mod_APDFT
 
 
 def get_property_values(property_name, dict, num_mol, apdft_order = 1):
@@ -58,9 +63,49 @@ class APDFT_Proc():
     return atomic_forces
 
 
-class ASE_APDFT_Interface(mod_APDFT):
+class ASE_APDFT_Interface(APDFT.mod_APDFT):
   """ APDFT-ASE calculators interface of APDFT for Lime's inverse design. """
 
 
 class ASE_OPT_Interface(ASE_OPT):
   """ APDFT-ASE geometry optimization interface of APDFT for Lime's inverse design. """
+
+  def imp_ase_opt():
+    """ Implement ASE geometry optimization.
+
+    How to perform geometry optimization?
+      import inverse_design.apdft_interface as APDFT_Interface
+      APDFT_Interface.ASE_OPT_Interface.imp_ase_opt()
+
+    Args:
+    """
+
+    # Conversion factor from Angstrom to Bohr
+    ang_to_bohr = 1 / 0.52917721067
+    # Conversion factor from hartree to eV
+    har_to_ev = 27.21162
+
+    # Hartree / Bohr to eV / Angstrom
+    hb_to_ea = har_to_ev * ang_to_bohr
+
+
+    start = time.time()
+
+    # coordinates of init.xyz should be in Angstrom.
+    nuclear_numbers, coordinates = APDFTtool.read_xyz("init.xyz")
+
+    molstring = ASE_OPT.get_molstring(nuclear_numbers)
+
+    MOL = Atoms(molstring,
+              positions=coordinates,
+              calculator=ASE_APDFT_Interface())
+
+    # dyn = BFGS(MOL)
+    dyn = BFGSLineSearch(MOL)
+    dyn.run(fmax=0.005 * hb_to_ea)
+
+    elapsed_time = time.time() - start
+    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+
+    with open('elapsed_time.dat', 'w') as tfile:
+      tfile.write("elapsed_time:{0}".format(elapsed_time) + "[sec]")
