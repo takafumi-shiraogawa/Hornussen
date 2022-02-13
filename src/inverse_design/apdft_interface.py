@@ -65,9 +65,18 @@ class APDFT_Proc():
         try:
           atomic_forces[:, i, didx] = get_property_values(
               "ver_atomic_force_%s_%s" % (str(i), str(dim)), dict_atomic_forces, self._num_mol)
-        except:
-          # TODO: exciption handling is required
-          pass
+        # For one-dimensional calculation (when only z-component is given)
+        except KeyError:
+          # For z-Cartesian component
+          if didx == 2:
+            file_atomic_forces.close()
+            file_atomic_forces = open(path_atomic_forces, "r")
+            dict_atomic_forces = csv.DictReader(file_atomic_forces)
+            atomic_forces[:, i, 2] = get_property_values(
+              "ver_atomic_force_%s" % str(i), dict_atomic_forces, self._num_mol)
+          # For x- and y-Cartesian components
+          else:
+            atomic_forces[:, i, didx] = 0.0
         file_atomic_forces.close()
 
     return atomic_forces
