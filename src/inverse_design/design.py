@@ -3,7 +3,7 @@ import numpy as np
 import random
 from inverse_design.physics import Calc_Prop
 from inverse_design.opt import line_searcher, optimality_criteria
-from inverse_design.apdft_interface import APDFT_Proc
+from inverse_design.apdft_interface import APDFT_Proc, ASE_OPT_Interface
 
 class Design_Tools():
   """ Tools of inverse design """
@@ -439,3 +439,10 @@ class Inverse_Design():
     print(norm_part_coeff)
     print(np.sum(norm_part_coeff))
     print("")
+
+
+    # Perform geometry optimization
+    print("")
+    print("Perform geometry optimization")
+    print("")
+    ASE_OPT_Interface.imp_ase_opt(norm_part_coeff)
