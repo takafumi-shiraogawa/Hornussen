@@ -169,7 +169,7 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
 class ASE_OPT_Interface(ASE_OPT):
   """ APDFT-ASE geometry optimization interface of APDFT for Lime's inverse design. """
 
-  def imp_ase_opt(norm_part_coeff):
+  def imp_ase_opt(nuclear_numbers, coordinates, norm_part_coeff):
     """ Implement ASE geometry optimization.
 
     How to perform geometry optimization?
@@ -181,13 +181,10 @@ class ASE_OPT_Interface(ASE_OPT):
     """
     start = time.time()
 
-    # coordinates of init.xyz should be in Angstrom.
-    nuclear_numbers, coordinates = APDFTtool.read_xyz("init.xyz")
+    # # coordinates of init.xyz should be in Angstrom.
+    # nuclear_numbers, coordinates = APDFTtool.read_xyz("init.xyz")
 
     molstring = ASE_OPT.get_molstring(nuclear_numbers)
-
-    # TODO: should be removed
-    norm_part_coeff = np.zeros(3)
 
     MOL = Atoms(molstring,
               positions=coordinates,
