@@ -148,6 +148,8 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
     """ Read calculated energy and atomic forces. """
     path = 'work/temp'
 
+    # TODO: now can handle the full-cartesian atomic force calculation only.
+    #       need to be generalized to handle the one-dimensional calculation.
     pot_energy, atom_forces = ASE_APDFT_Interface.calc_weight_energy_and_atom_forces(
         self, path)
 
