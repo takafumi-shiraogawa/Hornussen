@@ -441,8 +441,8 @@ class Inverse_Design():
     print("")
 
 
-    # Perform geometry optimization
-    print("Perform geometry optimization")
-    # Note that self._mol_target_list[0] is not used in geometry optimization.
-    ASE_OPT_Interface.imp_ase_opt(
-        self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
+    # # Perform geometry optimization
+    # print("Perform geometry optimization")
+    # # Note that self._mol_target_list[0] is not used in geometry optimization.
+    # ASE_OPT_Interface.imp_ase_opt(
+    #     self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
