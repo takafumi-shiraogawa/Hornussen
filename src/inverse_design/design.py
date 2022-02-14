@@ -505,3 +505,8 @@ class Inverse_Design():
       # Save results of the design
       Inverse_Design.update_output(
           self, w_opt_step + 1, norm_part_coeff, weight_atomization_energy)
+
+
+      ### Update molecular species
+      part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
+          part_coeff, weight_atomization_energy_gradient)
