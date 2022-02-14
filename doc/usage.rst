@@ -4,6 +4,29 @@ Usage
 Usage of Lime is described.
 
 
+Inputs & Outputs
+-------------------
+
+Inputs:
+  lime.conf
+  template/
+    apdft.conf
+    imp_mod_cli1.sh
+    imp_mod_cli2.sh
+  inputs/
+    *.xyz : specified by lime.conf
+    target_molecules.inp : specified by lime.conf
+  init.xyz : it should be same with *.xyz
+
+  Temporal inputs:
+  energies.csv
+  ver_atomic_forces.csv
+
+Outputs:
+  work/
+  elapsed_time.dat
+
+
 Flowchart
 -------------------
 
