@@ -435,6 +435,10 @@ class Inverse_Design():
     if os.path.isdir("geom_opt_hist/"):
       shutil.rmtree("geom_opt_hist/")
 
+    # Remove an old results of the design
+    if os.path.isfile('design_opt.dat'):
+      os.remove('design_opt.dat')
+
     # Set a maximum number of the molecular species
     # TODO: change it from 1. 1 is given for checking performance.
     max_w_opt_step = 1
@@ -442,8 +446,15 @@ class Inverse_Design():
     # Loop for design
     for w_opt_step in range(max_w_opt_step):
       # Note that self._mol_target_list[0] is not used in geometry optimization.
-      ASE_OPT_Interface.imp_ase_opt(
+      self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
           self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
 
       # Save work/ for geometry optimization
       Geom_OPT_Tools.save_geom_opt_hist(w_opt_step + 1)
+
+      # Save results of the design
+      with open('design_opt.dat', 'a') as f:
+        for i in range(self._num_atom):
+          print("Lime geometry:", w_opt_step + 1, self._geom_coordinate[i, :], file = f)
+        print("Lime geometry: -----", file = f)
+        print("", file = f)

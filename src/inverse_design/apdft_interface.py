@@ -191,6 +191,10 @@ class ASE_OPT_Interface(ASE_OPT):
 
     Args:
       norm_part_coeff  :  A (the number of target molecules) arrray
+
+    Returns:
+      MOL._get_positions() : A (the number of atoms, 3) arrray of optimized geometry
+                             of a molecule
     """
     # # coordinates of init.xyz should be in Angstrom.
     # nuclear_numbers, coordinates = APDFTtool.read_xyz("init.xyz")
@@ -204,3 +208,5 @@ class ASE_OPT_Interface(ASE_OPT):
     # dyn = BFGS(MOL)
     dyn = BFGSLineSearch(MOL)
     dyn.run(fmax=0.005 * hb_to_ea)
+
+    return MOL._get_positions()
