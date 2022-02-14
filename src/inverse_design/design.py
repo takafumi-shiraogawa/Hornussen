@@ -478,6 +478,7 @@ class Inverse_Design():
 
       # Save results of the design
       with open('design_opt.dat', 'a') as f:
+        print('Step', w_opt_step + 1, file=f)
         # Molecule
         for i in range(self._num_target_mol):
           print("Lime molecule:", 'step%i' % (w_opt_step + 1),
