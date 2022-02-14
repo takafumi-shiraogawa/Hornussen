@@ -222,7 +222,7 @@ class Inverse_Design():
     Rerturns:
       energies           : A (the number of molecules) array
       atomic_forces      : A (the number of molecules, 3) array
-      weight_energy      : A scaler
+      weight_energy      : A scalar
       weight_atom_forces : A (the number of molecules) array
     """
     apdft_proc = APDFT_Proc(self._num_target_mol, self._num_atom)

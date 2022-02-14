@@ -110,7 +110,7 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
       norm_part_coeff : A (the number of molecules) array of normalized participation
                         coefficients.
     Rerturns:
-      weight_energy      : A scaler
+      weight_energy      : A scalar
       weight_atom_forces : A (the number of molecules) array
     """
     apdft_proc = APDFT_Proc(self._num_target_mol, self._num_atom)
