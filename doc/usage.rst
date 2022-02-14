@@ -36,7 +36,7 @@ Flowchart
        the reference molecule by electronic structure theory to be used in modified APDFT.
 
 2. Design
-  2.1. Get weighted potential energy and weighted atomic forces by performing
+  2.1. Get weighted potential energy (and weighted atomic forces) by performing
        a modified APDFT calculation.
   2.2. Perturb participation coefficients.
   2.3.1. Get a stable geometry and potential energies at the end of a geometry optimization
