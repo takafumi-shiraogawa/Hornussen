@@ -483,6 +483,10 @@ class Inverse_Design():
           print("Lime molecule:", 'step', w_opt_step + 1,
                 'molecule', i, norm_part_coeff[i], file=f)
 
+        # Atomization energy
+        print("Lime atomization energy:", 'step', w_opt_step + 1,
+              weight_atomization_energy, file=f)
+
         # Molecular geometry
         for i in range(self._num_atom):
           print("Lime geometry:", 'step', w_opt_step + 1,
