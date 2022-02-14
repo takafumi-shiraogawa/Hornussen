@@ -480,17 +480,17 @@ class Inverse_Design():
       with open('design_opt.dat', 'a') as f:
         # Molecule
         for i in range(self._num_target_mol):
-          print("Lime molecule:", 'step', w_opt_step + 1,
-                'molecule', i, norm_part_coeff[i], file=f)
+          print("Lime molecule:", 'step%i' % (w_opt_step + 1),
+                'molecule%i' % i, norm_part_coeff[i], file=f)
 
         # Atomization energy
-        print("Lime atomization energy:", 'step', w_opt_step + 1,
+        print("Lime atomization energy:", 'step%i' % (w_opt_step + 1),
               weight_atomization_energy, file=f)
 
         # Molecular geometry
         for i in range(self._num_atom):
-          print("Lime geometry:", 'step', w_opt_step + 1,
-                'molecule', i, *self._geom_coordinate[i, :], file=f)
+          print("Lime geometry:", 'step%i' % (w_opt_step + 1),
+                'molecule%i' % i, *self._geom_coordinate[i, :], file=f)
         print("Lime geometry: -----", file = f)
 
         print("", file = f)
