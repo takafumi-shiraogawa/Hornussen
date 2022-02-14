@@ -362,6 +362,14 @@ class Inverse_Design():
       print(weight_atomization_energy)
       print("")
 
+      # Remove an old results of the design
+      if os.path.isfile('design_opt.dat'):
+        os.remove('design_opt.dat')
+
+      # Save results of the design
+      Inverse_Design.update_output(
+          self, 0, norm_part_coeff, weight_atomization_energy)
+
     ### 3.5. Calculate gradients of atomization energies with respect to participation coefficients
     weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
         atomization_energies, part_coeff)
@@ -456,10 +464,6 @@ class Inverse_Design():
     # Remove an old directory for saving geometry optimization histories.
     if os.path.isdir("geom_opt_hist/"):
       shutil.rmtree("geom_opt_hist/")
-
-    # Remove an old results of the design
-    if os.path.isfile('design_opt.dat'):
-      os.remove('design_opt.dat')
 
     # Set a maximum number of the molecular species
     # TODO: change it from 1. 1 is given for checking performance.
