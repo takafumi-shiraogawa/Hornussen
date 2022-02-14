@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+import shutil
 import numpy as np
 import random
 from inverse_design.physics import Calc_Prop
@@ -414,6 +416,10 @@ class Inverse_Design():
     print(np.sum(norm_part_coeff))
     print("")
 
+
+    # Remove an old directory for saving geometry optimization histories.
+    if os.path.isdir("geom_opt_hist/"):
+      shutil.rmtree("geom_opt_hist/")
 
     # # Perform geometry optimization
     # print("Perform geometry optimization")
