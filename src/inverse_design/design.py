@@ -449,6 +449,30 @@ class Inverse_Design():
       self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
           self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
 
+      ### Calculate properties
+      # Read energies
+      # Read atomic forces
+      # Calculate weighted properties
+      # Calculate weighted potential energy
+      # Calculate weighted atomic forces
+      energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+          self, './work/temp', norm_part_coeff)
+
+      # If the target property to be designed is atomization energy
+      if self._design_target_property == 'atomization_energy':
+
+        # Calculate atomization energies
+        atomization_energies = Calc_Prop.calc_atomization_energies(energies, self._sum_free_atom_energies)
+
+        # Calculate weighted atomization energy
+        weight_atomization_energy = Design_Tools.get_weight_property(atomization_energies, norm_part_coeff)
+
+      # Calculate gradients of atomization energies with respect to participation coefficients
+      weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
+          atomization_energies, part_coeff)
+
+
+      ### Save results
       # Save work/ for geometry optimization
       Geom_OPT_Tools.save_geom_opt_hist(w_opt_step + 1)
 
