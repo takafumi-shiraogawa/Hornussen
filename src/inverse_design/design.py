@@ -186,6 +186,17 @@ class Design_Tools():
     return weight_property_gradient
 
 
+class Geom_OPT_Tools():
+  """ Tools of inverse design """
+
+  def save_geom_opt_hist(opt_step):
+    """ Save a geometry optimization history. """
+
+    path = "geom_opt_hist/geom_opt-%s" % opt_step
+
+    shutil.copytree('./work', path)
+
+
 class Inverse_Design():
   """ Inverse design based on chemical space of geometrically relaxed molecules """
 
@@ -417,12 +428,22 @@ class Inverse_Design():
     print("")
 
 
+    # Perform geometry optimization
+    print("Perform geometry optimization")
+
     # Remove an old directory for saving geometry optimization histories.
     if os.path.isdir("geom_opt_hist/"):
       shutil.rmtree("geom_opt_hist/")
 
-    # # Perform geometry optimization
-    # print("Perform geometry optimization")
-    # # Note that self._mol_target_list[0] is not used in geometry optimization.
-    # ASE_OPT_Interface.imp_ase_opt(
-    #     self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
+    # Set a maximum number of the molecular species
+    # TODO: change it from 1. 1 is given for checking performance.
+    max_w_opt_step = 1
+
+    # Loop for design
+    for w_opt_step in range(max_w_opt_step):
+      # Note that self._mol_target_list[0] is not used in geometry optimization.
+      ASE_OPT_Interface.imp_ase_opt(
+          self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
+
+      # Save work/ for geometry optimization
+      Geom_OPT_Tools.save_geom_opt_hist(w_opt_step + 1)
