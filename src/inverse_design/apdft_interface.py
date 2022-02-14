@@ -161,10 +161,13 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
     pot_energy, atom_forces = ASE_APDFT_Interface.calc_weight_energy_and_atom_forces(
         self, path)
 
-    print("APDFT results:", self.num_opt_step, pot_energy)
-    for i in range(self._num_atom):
-      print("APDFT geometry:", self.num_opt_step, self.atoms.positions[i, :])
-    print("APDFT geometry:")
+    # Save results of geometry optimization
+    with open('./work/opt_results.dat', 'a') as f:
+      print("APDFT results:", self.num_opt_step, pot_energy, file = f)
+      for i in range(self._num_atom):
+        print("APDFT geometry:", self.num_opt_step, self.atoms.positions[i, :], file = f)
+      print("APDFT geometry: -----", file = f)
+      print("", file = f)
 
     self.results = {'energy': pot_energy * har_to_ev,
                     'forces': atom_forces * hb_to_ea,
