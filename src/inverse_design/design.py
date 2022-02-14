@@ -220,6 +220,8 @@ class Inverse_Design():
       norm_part_coeff : A (the number of molecules) array of normalized participation
                         coefficients.
     Rerturns:
+      energies           : A (the number of molecules) array
+      atomic_forces      : A (the number of molecules, 3) array
       weight_energy      : A scaler
       weight_atom_forces : A (the number of molecules) array
     """
@@ -257,7 +259,7 @@ class Inverse_Design():
     print(weight_atomic_forces)
     print("")
 
-    return weight_energy, weight_atomic_forces
+    return energies, atomic_forces, weight_energy, weight_atomic_forces
 
 
   def design(self):
@@ -299,40 +301,12 @@ class Inverse_Design():
 
     ### 2. Calculate properties
     ### 2.1. Read energies
-    apdft_proc = APDFT_Proc(self._num_target_mol, self._num_atom)
-    # energies = APDFT_Proc.read_potential_energies("energies.csv")
-    energies = apdft_proc.read_potential_energies("energies.csv")
-
-    # Check
-    print("energies")
-    print(energies)
-    print("")
-
     ### 2.2. Read atomic forces
-    atomic_forces = apdft_proc.read_atomic_forces("ver_atomic_forces.csv")
-
-    # Check
-    print("atomic_forces")
-    print(atomic_forces[:2])
-    print("")
-
-
     ### 3. Calculate weighted properties
     ### 3.1. Calculate weighted potential energy
-    weight_energy = Design_Tools.get_weight_property(energies, norm_part_coeff)
-
-    # Check
-    print("weight_energy")
-    print(weight_energy)
-    print("")
-
     ### 3.2. Calculate weighted atomic forces
-    weight_atomic_forces = Design_Tools.get_weight_atomic_forces(atomic_forces, norm_part_coeff)
-
-    # Check
-    print("weight_atomic_forces")
-    print(weight_atomic_forces)
-    print("")
+    energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+        self, '.', norm_part_coeff)
 
     # If the target property to be designed is atomization energy
     if self._design_target_property == 'atomization_energy':
