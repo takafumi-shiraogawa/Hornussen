@@ -478,11 +478,15 @@ class Inverse_Design():
 
       # Save results of the design
       with open('design_opt.dat', 'a') as f:
+        # Molecule
         for i in range(self._num_target_mol):
           print("Lime molecule:", 'step', w_opt_step + 1,
                 'molecule', i, norm_part_coeff[i], file=f)
+
+        # Molecular geometry
         for i in range(self._num_atom):
           print("Lime geometry:", 'step', w_opt_step + 1,
                 'molecule', i, *self._geom_coordinate[i, :], file=f)
         print("Lime geometry: -----", file = f)
+
         print("", file = f)
