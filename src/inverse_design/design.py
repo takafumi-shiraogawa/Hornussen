@@ -275,6 +275,28 @@ class Inverse_Design():
     return energies, atomic_forces, weight_energy, weight_atomic_forces
 
 
+  def update_output(self, w_opt_step, norm_part_coeff, weight_atomization_energy):
+    """ Make and update an output of the design. """
+    with open('design_opt.dat', 'a') as f:
+      print('Step', w_opt_step, file=f)
+      # Molecule
+      for i in range(self._num_target_mol):
+        print("Lime molecule:", 'step%i' % (w_opt_step),
+              'molecule%i' % i, norm_part_coeff[i], file=f)
+
+      # Atomization energy
+      print("Lime atomization energy:", 'step%i' % (w_opt_step),
+            weight_atomization_energy, file=f)
+
+      # Molecular geometry
+      for i in range(self._num_atom):
+        print("Lime geometry:", 'step%i' % (w_opt_step),
+              'molecule%i' % i, *self._geom_coordinate[i, :], file=f)
+      print("Lime geometry: -----", file = f)
+
+      print("", file = f)
+
+
   def design(self):
     """ Perform inverse design """
 
@@ -477,21 +499,5 @@ class Inverse_Design():
       Geom_OPT_Tools.save_geom_opt_hist(w_opt_step + 1)
 
       # Save results of the design
-      with open('design_opt.dat', 'a') as f:
-        print('Step', w_opt_step + 1, file=f)
-        # Molecule
-        for i in range(self._num_target_mol):
-          print("Lime molecule:", 'step%i' % (w_opt_step + 1),
-                'molecule%i' % i, norm_part_coeff[i], file=f)
-
-        # Atomization energy
-        print("Lime atomization energy:", 'step%i' % (w_opt_step + 1),
-              weight_atomization_energy, file=f)
-
-        # Molecular geometry
-        for i in range(self._num_atom):
-          print("Lime geometry:", 'step%i' % (w_opt_step + 1),
-                'molecule%i' % i, *self._geom_coordinate[i, :], file=f)
-        print("Lime geometry: -----", file = f)
-
-        print("", file = f)
+      Inverse_Design.update_output(
+          self, w_opt_step + 1, norm_part_coeff, weight_atomization_energy)
