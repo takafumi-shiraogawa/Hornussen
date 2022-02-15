@@ -321,9 +321,9 @@ class Inverse_Design():
     return atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient
 
 
-  def update_output(self, w_opt_step, norm_part_coeff, weight_atomization_energy):
+  def update_output(self, w_opt_step, norm_part_coeff, weight_atomization_energy, file_name = 'design_opt.dat'):
     """ Make and update an output of the design. """
-    with open('design_opt.dat', 'a') as f:
+    with open(str(file_name), 'a') as f:
       print('Step', w_opt_step, file=f)
       # Molecule
       for i in range(self._num_target_mol):
@@ -341,6 +341,61 @@ class Inverse_Design():
       print("Lime geometry: -----", file = f)
 
       print("", file = f)
+
+
+  def interpolation(self, idx_two_mols, num_div = 10):
+    """ Perform interpolation between two real molecules """
+
+    # Remove an old directory for saving geometry optimization histories.
+    if os.path.isdir("geom_opt_hist/"):
+      shutil.rmtree("geom_opt_hist/")
+
+    # Exception handling
+    if len(idx_two_mols) != 2:
+      raise ValueError("idx_two_mols should be two molecules in interpolation.")
+
+    part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[0])
+    norm_part_coeff_mol1 = Design_Tools.norm_part_coeff(part_coeff)
+
+    part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[1])
+    norm_part_coeff_mol2 = Design_Tools.norm_part_coeff(part_coeff)
+
+    change = 1.0 / num_div
+
+    for idx_num_div in range(num_div + 1):
+      # Perform interpolation of two molecules
+      interp_norm_part_coeff = (1.0 - change * idx_num_div) * \
+          norm_part_coeff_mol1 + change * idx_num_div * norm_part_coeff_mol2
+
+      # Perform geometry optimization
+      self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
+          self._mol_target_list[0], self._geom_coordinate, interp_norm_part_coeff)
+
+      ### Calculate properties
+      # Read energies
+      # Read atomic forces
+      # Calculate weighted properties
+      # Calculate weighted potential energy
+      # Calculate weighted atomic forces
+      energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+          self, './work/temp', interp_norm_part_coeff)
+
+      # If the target property to be designed is atomization energy
+      if self._design_target_property == 'atomization_energy':
+
+        # Calculate atomization energies
+        # Calculate weighted atomization energy
+        # Calculate gradients of atomization energies with respect to participation coefficients
+        atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+            energies, self._sum_free_atom_energies, interp_norm_part_coeff, part_coeff)
+
+      ### Save results
+      # Save work/ for geometry optimization
+      Geom_OPT_Tools.save_geom_opt_hist(idx_num_div + 1)
+
+      # Save results of the design
+      Inverse_Design.update_output(
+          self, idx_num_div + 1, interp_norm_part_coeff, weight_atomization_energy, 'interpolation.dat')
 
 
   def design(self):

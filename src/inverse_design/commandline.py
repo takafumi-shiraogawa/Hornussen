@@ -35,3 +35,14 @@ def ignition_design():
       geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
 
   derivatives.design()
+
+
+@stop_watch
+def ignition_interpolation(idx_two_mol, num_div):
+  geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
+  design_target_property = iconf.Option.get_input_design()
+
+  derivatives = ds.Inverse_Design(
+      geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
+
+  derivatives.interpolation(idx_two_mol, num_div)
