@@ -469,37 +469,6 @@ class Inverse_Design():
     print(Design_Tools.get_change_norm_part_coeff(temp_norm_part_coeff, norm_part_coeff))
     print("")
 
-    ### 4.1. Calculate weighted atomization energy
-    weight_atomization_energy = Design_Tools.get_weight_property(atomization_energies, norm_part_coeff)
-
-    # Check
-    print("weight_atomization_energy")
-    print(weight_atomization_energy)
-    print("")
-
-    ### 4.2. Calculate gradients of atomization energies with respect to participation coefficients
-    weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
-        atomization_energies, part_coeff)
-
-    # Check
-    print("weight_atomization_energy_gradient")
-    print(weight_atomization_energy_gradient)
-    print("")
-
-
-    ### 5. Update participation coefficients
-    part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
-        part_coeff, weight_atomization_energy_gradient)
-
-    # Check
-    print("part_coeff")
-    print(part_coeff)
-    print("")
-    print("norm_part_coeff")
-    print(norm_part_coeff)
-    print(np.sum(norm_part_coeff))
-    print("")
-
 
     # Perform geometry optimization
     print("Perform geometry optimization")
