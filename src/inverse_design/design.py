@@ -76,6 +76,35 @@ class Design_Tools():
     return new_part_coeff, new_norm_part_coeff
 
 
+  def redistr_part_coeff(part_coeff):
+    """ Re-distribute participation coefficients """
+
+    # Get indexes of nonzero components of paticipation coefficients
+    idx_nonzero = np.nonzero(part_coeff)
+
+    # Calculate a sum of participation coefficients
+    sum_part_coeff = np.sum(part_coeff)
+
+    perturb_param = 0.0
+    for i, idx in enumerate(idx_nonzero):
+      perturb_param += part_coeff[idx] * 0.01
+
+    new_part_coeff = part_coeff
+    for i in range(len(part_coeff)):
+      if i not in idx_nonzero:
+        new_part_coeff[i] += perturb_param
+      else:
+        new_part_coeff[i] -= perturb_param
+
+    # Normalize new participation coefficients
+    # new_norm_part_coeff = Design_Tools.norm_part_coeff(new_part_coeff)
+    if len(idx_nonzero) != 1:
+      raise ValueError("Initial participation coefficients are not valid.")
+    new_norm_part_coeff = part_coeff / sum_part_coeff
+
+    return new_part_coeff, new_norm_part_coeff
+
+
   def get_change_norm_part_coeff(old_norm_part_coeff, new_norm_part_coeff):
     """ Estimate a change of normalized participation coefficients """
 
@@ -425,7 +454,8 @@ class Inverse_Design():
     # Save for check change of normalized participation coefficients
     temp_norm_part_coeff = np.copy(norm_part_coeff)
 
-    part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
+    # part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
+    part_coeff, norm_part_coeff = Design_Tools.redistr_part_coeff(part_coeff)
 
     # Check
     print("part_coeff")
