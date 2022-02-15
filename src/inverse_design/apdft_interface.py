@@ -165,7 +165,7 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
     with open('./work/geom_opt.dat', 'a') as f:
       print("APDFT results:", self.num_opt_step, pot_energy, file = f)
       for i in range(self._num_atom):
-        print("APDFT geometry:", self.num_opt_step, self.atoms.positions[i, :], file = f)
+        print("APDFT geometry:", self.num_opt_step, *self.atoms.positions[i, :], file = f)
       print("APDFT geometry: -----", file = f)
       print("", file = f)
 
