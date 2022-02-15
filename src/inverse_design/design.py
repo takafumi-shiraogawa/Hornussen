@@ -344,7 +344,12 @@ class Inverse_Design():
 
 
   def interpolation(self, idx_two_mols, num_div = 10):
-    """ Perform interpolation between two real molecules """
+    """ Perform interpolation between two real molecules.
+
+    Args:
+      idx_two_mols : A (2) arrays of indexes that specify two molecules to be interpolated.
+      num_div      : A scalar of the number of divided componenets in the interpolation.
+    """
 
     # Remove an old directory for saving geometry optimization histories.
     if os.path.isdir("geom_opt_hist/"):
