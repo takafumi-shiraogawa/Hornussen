@@ -27,7 +27,7 @@ def stop_watch(func):
 
 
 @stop_watch
-def ignition():
+def ignition_design():
   geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
   design_target_property = iconf.Option.get_input_design()
 
