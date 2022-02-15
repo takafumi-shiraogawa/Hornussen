@@ -1,0 +1,210 @@
+import numpy as np
+import numpy
+import pyscf
+import pyscf.gto
+import pyscf.qmmm
+import pyscf.scf
+import pyscf.dft
+import pyscf.lib
+import pyscf.grad
+from pyscf.data import nist
+
+angstrom = 1 / 0.52917721067
+
+# Set information on a reference molecule
+mol = pyscf.gto.Mole()
+mol.atom = "7 0.000000000000000 0.000000000000000 0.000000000000000;7 0.000000000000000 0.000000000000000 1.100000000000000"
+mol.basis = {7: '#----------------------------------------------------------------------\n# Basis Set Exchange\n# Version v0.8.13\n# https://www.basissetexchange.org\n#----------------------------------------------------------------------\n#   Basis set: def2-TZVP\n# Description: def2-TZVP\n#        Role: orbital\n#     Version: 1  (Data from Turbomole 7.3)\n#----------------------------------------------------------------------\n\n\nBASIS "ao basis" PRINT\n#BASIS SET: (11s,6p,2d,1f) -> [5s,3p,2d,1f]\nN    S\n  19730.8006470              0.21887984991E-03\n   2957.8958745              0.16960708803E-02\n    673.22133595             0.87954603538E-02\n    190.68249494             0.35359382605E-01\n     62.295441898            0.11095789217\n     22.654161182            0.24982972552\nN    S\n      8.9791477428           0.40623896148\n      3.6863002370           0.24338217176\nN    S\n      0.84660076805          1.0000000\nN    S\n      0.33647133771          1.0000000\nN    S\n      0.13647653675          1.0000000\nN    P\n     49.200380510            0.55552416751E-02\n     11.346790537            0.38052379723E-01\n      3.4273972411           0.14953671029\n      1.1785525134           0.34949305230\nN    P\n      0.41642204972           .45843153697\nN    P\n      0.14260826011           .24428771672\nN    D\n      1.65400000             1.0000000\nN    D\n      0.46900000             1.0000000\nN    F\n      1.09300000             1.0000000\nEND\n'}
+mol.verbose = 0
+mol.build()
+
+# Set information on a original reference molecule
+original_mol = pyscf.gto.Mole()
+original_mol.atom = "7 0.000000000000000 0.000000000000000 0.000000000000000;7 0.000000000000000 0.000000000000000 1.100000000000000"
+original_mol.build()
+
+# Set information on a target molecule
+target_mol = pyscf.gto.Mole()
+target_mol.atom = "7 0.000000000000000 0.000000000000000 0.000000000000000;7 0.000000000000000 0.000000000000000 1.100000000000000"
+target_mol.build()
+
+# Set information on all atom geometries for generating numerical grids
+all_mol = pyscf.gto.Mole()
+all_mol.atom = "7 0.000000000000000 0.000000000000000 0.000000000000000;7 0.000000000000000 0.000000000000000 1.100000000000000"
+all_mol.spin = 0
+all_mol.build()
+
+# Set a quantum chemical computation method
+# Only CCSD or HF is allowed.
+method = "CCSD"
+if method not in ["CCSD", "HF"]:
+    raise NotImplementedError("Method %s not supported." % method)
+
+deltaZ = np.array((0.0,0.05))
+includeonly = np.array((0,1))
+
+
+def add_qmmm(calc, mol, deltaZ):
+    # Background charges are patched to the underlying SCF calculation
+    # The qmmm module implements the elctronic embedding model.
+    mf = pyscf.qmmm.mm_charge(calc, mol.atom_coords()[includeonly]/ angstrom, deltaZ)
+
+    def energy_nuc(self):
+        q = mol.atom_charges().astype(float)
+        q[includeonly] += deltaZ
+        return mol.energy_nuc(q)
+
+    mf.energy_nuc = energy_nuc.__get__(mf, mf.__class__)
+
+    return mf
+
+
+if method == "HF":
+    # Set SCF calculation condition
+    calc = add_qmmm(pyscf.scf.RHF(mol), mol, deltaZ)
+    # kernel() function is the simple way to call HF driver.
+    # verbose is the output level.
+    hfe = calc.kernel(verbose=0)
+    # One-particle density matrix in AO representation:
+    # MO occupation number
+    # * MO coefficients
+    # * conjugated MO coefficients
+    dm1_ao = calc.make_rdm1()
+    total_energy = calc.e_tot
+    # Calculate nuclear-nuclear repulsion energy of
+    # of the reference molecule and
+    # Enn = calc.energy_nuc()
+    # of the target molecular geometry
+    # target_Enn = target_mol.energy_nuc()
+
+    # If this is a calculation of the reference molecule,
+    # calculate analytical gradients.
+    # TODO: modulate this routine since this procedure performs HF twice
+    #       in HF and mycc.
+    # TODO: here the last condition is redundant, and modification is possible
+    if np.count_nonzero(deltaZ) == 0 and mol.atom == original_mol.atom \
+        and target_mol.atom == original_mol.atom:
+        # Because this calculation does not use QM/MM, standard HF can be used instead.
+        mf_scf = pyscf.scf.RHF(mol).run()
+        grad_scf = pyscf.grad.RHF(mf_scf).kernel()
+
+        for site in includeonly:
+            # derivative of total energy
+            print("REFERENCE_ENERGY_DERIVATIVE", site, *grad_scf[site])
+
+if method == "CCSD":
+    calc = add_qmmm(pyscf.scf.RHF(mol), mol, deltaZ)
+    hfe = calc.kernel(verbose=0)
+    mycc = pyscf.cc.CCSD(calc).run()
+    # Unrelaxed density matrix is evaluated in the MO basis
+    dm1 = mycc.make_rdm1()
+    # Convert the density matrix into the AO basis
+    dm1_ao = np.einsum("pi,ij,qj->pq", calc.mo_coeff, dm1, calc.mo_coeff.conj())
+    total_energy = mycc.e_tot
+    # Calculate nuclear-nuclear repulsion energy of
+    # of the reference molecule and
+    # Enn = calc.energy_nuc()
+    # of the target molecular geometry
+    # target_Enn = target_mol.energy_nuc()
+
+    # If this is a calculation of the reference molecule,
+    # calculate analytical gradients.
+    # TODO: modulate this routine since this procedure performs CCSD twice
+    #       in cc_scanner and mycc.
+    # TODO: here the last condition is redundant, and modification is possible
+    if np.count_nonzero(deltaZ) == 0 and mol.atom == original_mol.atom \
+        and target_mol.atom == original_mol.atom:
+        # Because this calculation does not use QM/MM, standard HF can be used instead.
+        cc_scanner = pyscf.cc.CCSD(pyscf.scf.RHF(
+            mol)).nuc_grad_method().as_scanner()
+        e_tot_cc_scanner, grad_cc_scanner = cc_scanner(mol)
+
+        for site in includeonly:
+            # derivative of total energy
+            print("REFERENCE_ENERGY_DERIVATIVE", site, *grad_cc_scanner[site])
+
+# GRIDLESS, as things should be ############################
+# Total energy of SCF run
+
+print("TOTAL_ENERGY", total_energy)
+# print("NN_ENERGY", Enn)
+# print("NN_ENERGY2", target_Enn)
+
+# Electronic EPN from electron density
+# For the reference molecule
+for site in includeonly:
+    # Update origin for operator `\frac{1}{|r-R_O|}`.
+    mol.set_rinv_orig_(original_mol.atom_coords()[site])
+    print("ELECTRONIC_EPN", site, np.matmul(dm1_ao, mol.intor("int1e_rinv")).trace())
+
+# For the target molecule
+for site in includeonly:
+    # Update origin for operator `\frac{1}{|r-R_O|}`
+    mol.set_rinv_orig_(target_mol.atom_coords()[site])
+    print("ELECTRONIC_EPN2", site, np.matmul(dm1_ao, mol.intor("int1e_rinv")).trace())
+
+# Electronic Dipole w.r.t to center of geometry (geometrical center)
+with mol.with_common_orig(mol.atom_coords().mean(axis=0)):
+    ao_dip = mol.intor_symmetric("int1e_r", comp=3)
+dipole = -numpy.einsum("xij,ji->x", ao_dip, dm1_ao).real
+print("ELECTRONIC_DIPOLE", *dipole)
+
+# Target electronic Dipole w.r.t to center of geometry (geometrical center)
+# of the target molecule
+with mol.with_common_orig(target_mol.atom_coords().mean(axis=0)):
+    target_ao_dip = mol.intor_symmetric("int1e_r", comp=3)
+target_dipole = -numpy.einsum("xij,ji->x", target_ao_dip, dm1_ao).real
+print("TARGET_ELECTRONIC_DIPOLE", *target_dipole)
+
+# GRID, as things were #####################################
+# For evaluation of atomic forces, numerical grids are small near both
+# reference and target atoms.
+grid = pyscf.dft.gen_grid.Grids(all_mol)
+# level = 3 is a standard condition of PySCF
+grid.level = 3
+grid.build()
+# Calculate AO values on the grids
+ao_value = pyscf.dft.numint.eval_ao(mol, grid.coords, deriv=0)
+# Calculate electron density on the grids
+# Using xctype="LDA", rho only contains the electron density
+# at the grids
+rho = pyscf.dft.numint.eval_rho(mol, ao_value, dm1_ao, xctype="LDA")
+
+# Electronic Dipole evaluated with grids
+# Set distance vectors to the grids from a mass center
+# of the molecule
+num_r = grid.coords - mol.atom_coords().mean(axis=0)
+num_dipole = -np.einsum('g,g,gx->x', rho, grid.weights, num_r)
+print("NUMERICAL_DIPOLE", *num_dipole)
+
+# Ionic Forces
+for site in includeonly:
+    rvec = grid.coords - mol.atom_coords()[site]
+    force = [
+        (rho * grid.weights * rvec[:, _] / np.linalg.norm(rvec, axis=1) ** 3).sum()
+        for _ in range(3)
+    ]
+    print("IONIC_FORCE", site, *force)
+
+# Target ionic Forces
+# Numerical grids are small near both reference and
+# target atoms.
+for site in includeonly:
+    target_rvec = grid.coords - target_mol.atom_coords()[site]
+    target_force = [
+        (rho * grid.weights * target_rvec[:, _] /
+         np.linalg.norm(target_rvec, axis=1) ** 3).sum()
+        for _ in range(3)
+    ]
+    print("TARGET_IONIC_FORCE", site, *target_force)
+
+# Quadrupole moments
+rs = grid.coords - mol.atom_coords().mean(axis=0)
+ds = np.linalg.norm(rs, axis=1) ** 2
+# Q = np.zeros((3,3))
+for i in range(3):
+    for j in range(i, 3):
+        q = 3 * rs[:, i] * rs[:, j]
+        if i == j:
+            q -= ds
+        print("ELECTRONIC_QUADRUPOLE", i, j, (rho * q * grid.weights).sum())

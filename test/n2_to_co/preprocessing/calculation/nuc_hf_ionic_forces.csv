@@ -1,0 +1,3 @@
+targets,force_atom0_x,force_atom0_y,force_atom0_z,force_atom1_x,force_atom1_y,force_atom1_z,force_atom0_x_order0,force_atom0_y_order0,force_atom0_z_order0,force_atom1_x_order0,force_atom1_y_order0,force_atom1_z_order0,force_atom0_x_order1,force_atom0_y_order1,force_atom0_z_order1,force_atom1_x_order1,force_atom1_y_order1,force_atom1_z_order1
+"N,N",0.0,0.0,-11.339997929199663,0.0,0.0,11.339997929199663,0.0,0.0,-11.339997929199663,0.0,0.0,11.339997929199663,0.0,0.0,-11.339997929199663,0.0,0.0,11.339997929199663
+"O,C",0.0,0.0,-11.108569400032323,0.0,0.0,11.108569400032323,0.0,0.0,-11.108569400032323,0.0,0.0,11.108569400032323,0.0,0.0,-11.108569400032323,0.0,0.0,11.108569400032323
