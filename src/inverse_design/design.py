@@ -343,13 +343,17 @@ class Inverse_Design():
       print("", file = f)
 
 
-  def interpolation(self, idx_two_mols, num_div = 10):
+  def interpolation(self, idx_two_mols, type_interp, num_div = 10):
     """ Perform interpolation between two real molecules.
 
     Args:
       idx_two_mols : A (2) arrays of indexes that specify two molecules to be interpolated.
+      type_interp  : A string of a type of the interpolation.
       num_div      : A scalar of the number of divided componenets in the interpolation.
     """
+
+    if type_interp not in ['w', 'a']:
+      raise ValueError("type_interp should be w or a in interpolation")
 
     # Remove an old directory for saving geometry optimization histories.
     if os.path.isdir("geom_opt_hist/"):
@@ -359,18 +363,28 @@ class Inverse_Design():
     if len(idx_two_mols) != 2:
       raise ValueError("idx_two_mols should be two molecules in interpolation.")
 
-    part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[0])
-    norm_part_coeff_mol1 = Design_Tools.norm_part_coeff(part_coeff)
-
-    part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[1])
-    norm_part_coeff_mol2 = Design_Tools.norm_part_coeff(part_coeff)
+    if type_interp == 'w':
+      part_coeff_mol1 = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[0])
+      part_coeff_mol2 = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[1])
+    else:
+      part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[0])
+      norm_part_coeff_mol1 = Design_Tools.norm_part_coeff(part_coeff)
+      part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[1])
+      norm_part_coeff_mol2 = Design_Tools.norm_part_coeff(part_coeff)
 
     change = 1.0 / num_div
 
     for idx_num_div in range(num_div + 1):
       # Perform interpolation of two molecules
-      interp_norm_part_coeff = (1.0 - change * idx_num_div) * \
-          norm_part_coeff_mol1 + change * idx_num_div * norm_part_coeff_mol2
+      if type_interp == 'w':
+        interp_part_coeff = (1.0 - change * idx_num_div) * \
+            part_coeff_mol1 + change * idx_num_div * part_coeff_mol2
+        interp_norm_part_coeff = Design_Tools.norm_part_coeff(interp_part_coeff)
+        # This does not make sense
+        part_coeff = interp_part_coeff
+      else:
+        interp_norm_part_coeff = (1.0 - change * idx_num_div) * \
+            norm_part_coeff_mol1 + change * idx_num_div * norm_part_coeff_mol2
 
       # Perform geometry optimization
       self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
