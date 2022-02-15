@@ -343,17 +343,21 @@ class Inverse_Design():
       print("", file = f)
 
 
-  def interpolation(self, idx_two_mols, type_interp, num_div = 10):
+  def interpolation(self, idx_two_mols, type_interp, geom_opt, num_div = 10):
     """ Perform interpolation between two real molecules.
 
     Args:
       idx_two_mols : A (2) arrays of indexes that specify two molecules to be interpolated.
       type_interp  : A string of a type of the interpolation.
+      geom_opt     : A boolean for geometry optimization.
       num_div      : A scalar of the number of divided componenets in the interpolation.
     """
 
     if type_interp not in ['w', 'a']:
       raise ValueError("type_interp should be w or a in interpolation")
+
+    if type(geom_opt) is not bool:
+      raise ValueError("geom_opt should be boolean in interpolation")
 
     # Remove an old directory for saving geometry optimization histories.
     if os.path.isdir("geom_opt_hist/"):
@@ -386,9 +390,10 @@ class Inverse_Design():
         interp_norm_part_coeff = (1.0 - change * idx_num_div) * \
             norm_part_coeff_mol1 + change * idx_num_div * norm_part_coeff_mol2
 
-      # Perform geometry optimization
-      self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
-          self._mol_target_list[0], self._geom_coordinate, interp_norm_part_coeff)
+      if geom_opt:
+        # Perform geometry optimization
+        self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
+            self._mol_target_list[0], self._geom_coordinate, interp_norm_part_coeff)
 
       ### Calculate properties
       # Read energies
@@ -396,8 +401,12 @@ class Inverse_Design():
       # Calculate weighted properties
       # Calculate weighted potential energy
       # Calculate weighted atomic forces
+      if geom_opt:
+        path_inputs = './work/temp'
+      else:
+        path_inputs = '.'
       energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
-          self, './work/temp', interp_norm_part_coeff)
+            self, path_inputs, interp_norm_part_coeff)
 
       # If the target property to be designed is atomization energy
       if self._design_target_property == 'atomization_energy':
@@ -409,8 +418,9 @@ class Inverse_Design():
             energies, self._sum_free_atom_energies, interp_norm_part_coeff, part_coeff)
 
       ### Save results
-      # Save work/ for geometry optimization
-      Geom_OPT_Tools.save_geom_opt_hist(idx_num_div + 1)
+      if geom_opt:
+        # Save work/ for geometry optimization
+        Geom_OPT_Tools.save_geom_opt_hist(idx_num_div + 1)
 
       # Save results of the design
       Inverse_Design.update_output(
