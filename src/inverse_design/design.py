@@ -359,6 +359,10 @@ class Inverse_Design():
     if type(geom_opt) is not bool:
       raise ValueError("geom_opt should be boolean in interpolation")
 
+    # Remove an old results of the design
+    if os.path.isfile('interpolation.dat'):
+      os.remove('interpolation.dat')
+
     # Remove an old directory for saving geometry optimization histories.
     if os.path.isdir("geom_opt_hist/"):
       shutil.rmtree("geom_opt_hist/")
