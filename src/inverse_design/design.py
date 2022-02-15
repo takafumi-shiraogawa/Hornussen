@@ -430,6 +430,9 @@ class Inverse_Design():
       Inverse_Design.update_output(
           self, idx_num_div + 1, interp_norm_part_coeff, weight_atomization_energy, 'interpolation.dat')
 
+    if geom_opt:
+      shutil.rmtree("work/")
+
 
   def design(self):
     """ Perform inverse design """
@@ -606,3 +609,5 @@ class Inverse_Design():
       ### Update molecular species
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
           part_coeff, weight_atomization_energy_gradient)
+
+    shutil.rmtree("work/")
