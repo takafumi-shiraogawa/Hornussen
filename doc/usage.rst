@@ -23,8 +23,9 @@ Inputs:
     target_molecules.inp : specified by lime.conf
 
 Outputs:
-  work/
+  design_opt.dat
   elapsed_time.dat
+  geom_opt_hist/
 
 
 Flowchart
