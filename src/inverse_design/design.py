@@ -275,6 +275,23 @@ class Inverse_Design():
     return energies, atomic_forces, weight_energy, weight_atomic_forces
 
 
+  def calc_atomization_energies_and_gradients(energies, sum_free_atom_energies, norm_part_coeff, part_coeff):
+    """" Calculate atomization energies and its sign-inverted gradients """
+    # Calculate atomization energies
+    atomization_energies = Calc_Prop.calc_atomization_energies(
+        energies, sum_free_atom_energies)
+
+    # Calculate weighted atomization energy
+    weight_atomization_energy = Design_Tools.get_weight_property(
+        atomization_energies, norm_part_coeff)
+
+    # Calculate sign-inverted gradients of atomization energies with respect to participation coefficients
+    weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
+        atomization_energies, part_coeff)
+
+    return atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient
+
+
   def update_output(self, w_opt_step, norm_part_coeff, weight_atomization_energy):
     """ Make and update an output of the design. """
     with open('design_opt.dat', 'a') as f:
@@ -347,15 +364,15 @@ class Inverse_Design():
     if self._design_target_property == 'atomization_energy':
 
       ### 3.3. Calculate atomization energies
-      atomization_energies = Calc_Prop.calc_atomization_energies(energies, self._sum_free_atom_energies)
+      ### 3.4. Calculate weighted atomization energy
+      ### 3.5. Calculate gradients of atomization energies with respect to participation coefficients
+      atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+        energies, self._sum_free_atom_energies, norm_part_coeff, part_coeff)
 
       # Check
       print("atomization_energies")
       print(atomization_energies)
       print("")
-
-      ### 3.4. Calculate weighted atomization energy
-      weight_atomization_energy = Design_Tools.get_weight_property(atomization_energies, norm_part_coeff)
 
       # Check
       print("weight_atomization_energy")
@@ -369,10 +386,6 @@ class Inverse_Design():
       # Save results of the design
       Inverse_Design.update_output(
           self, 0, norm_part_coeff, weight_atomization_energy)
-
-    ### 3.5. Calculate gradients of atomization energies with respect to participation coefficients
-    weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
-        atomization_energies, part_coeff)
 
     # Check
     print("weight_atomization_energy_gradient")
@@ -488,14 +501,10 @@ class Inverse_Design():
       if self._design_target_property == 'atomization_energy':
 
         # Calculate atomization energies
-        atomization_energies = Calc_Prop.calc_atomization_energies(energies, self._sum_free_atom_energies)
-
         # Calculate weighted atomization energy
-        weight_atomization_energy = Design_Tools.get_weight_property(atomization_energies, norm_part_coeff)
-
-      # Calculate gradients of atomization energies with respect to participation coefficients
-      weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
-          atomization_energies, part_coeff)
+        # Calculate gradients of atomization energies with respect to participation coefficients
+        atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+            energies, self._sum_free_atom_energies, norm_part_coeff, part_coeff)
 
 
       ### Save results
