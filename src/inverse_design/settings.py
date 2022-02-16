@@ -64,8 +64,7 @@ class Option:
     dict_dict_free_atom_energies['atom'] = []
     dict_dict_free_atom_energies['atom_energy'] = []
 
-    # TODO: 'G16_CCSD_highspin' need to correspond to the calculation method
-    type_atom_energy = 'G16_CCSD_highspin'
+    type_atom_energy = 'pyscf_CCSD_highspin'
 
     for i, row in enumerate(dict_free_atom_energies):
       dict_dict_free_atom_energies['atom'].append(int(row['atom']))
