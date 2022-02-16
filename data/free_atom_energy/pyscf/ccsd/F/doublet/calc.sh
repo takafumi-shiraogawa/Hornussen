@@ -1,0 +1,1 @@
+python3 calc.py > calc.out
