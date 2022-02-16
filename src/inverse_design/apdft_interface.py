@@ -184,7 +184,7 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
 class ASE_OPT_Interface(ASE_OPT):
   """ APDFT-ASE geometry optimization interface of APDFT for Lime's inverse design. """
 
-  def imp_ase_opt(nuclear_numbers, coordinates, norm_part_coeff):
+  def imp_ase_opt(nuclear_numbers, coordinates, norm_part_coeff, fmax_au = 0.005):
     """ Implement ASE geometry optimization.
 
     How to perform geometry optimization?
@@ -213,7 +213,7 @@ class ASE_OPT_Interface(ASE_OPT):
 
     # dyn = BFGS(MOL)
     dyn = BFGSLineSearch(MOL, logfile="BFGSLineSearch.dat")
-    dyn.run(fmax=0.005 * hb_to_ea)
+    dyn.run(fmax=fmax_au * hb_to_ea)
 
     # Move the output of geometry optimization into the working directory.
     shutil.move("BFGSLineSearch.dat", "./work/")
