@@ -93,11 +93,11 @@ class Option:
     # Read target molecules
     mol_target_list = apm.IntegerPartitions.read_target_molecules(target_mol_path)
 
-    if len(nuclear_numbers) != len(mol_target_list[0]):
-      raise ValueError("A list of target molecules needs to have a reference molecule in the first line.")
-    for i in range(len(nuclear_numbers)):
-      if nuclear_numbers[i] != mol_target_list[0][i]:
-        raise ValueError("A list of target molecules needs to have a reference molecule in the first line.")
+    # if len(nuclear_numbers) != len(mol_target_list[0]):
+    #   raise ValueError("A list of target molecules needs to have a reference molecule in the first line.")
+    # for i in range(len(nuclear_numbers)):
+    #   if nuclear_numbers[i] != mol_target_list[0][i]:
+    #     raise ValueError("A list of target molecules needs to have a reference molecule in the first line.")
 
     # Read free atom energies
     free_atom_energies = Option.get_free_atom_energies()
