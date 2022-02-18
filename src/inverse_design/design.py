@@ -272,34 +272,34 @@ class Inverse_Design():
     # Read potential energies of target molecules
     energies = apdft_proc.read_potential_energies("%s/energies.csv" % path)
 
-    # Check
-    print("energies")
-    print(energies)
-    print("")
+    # # Check
+    # print("energies")
+    # print(energies)
+    # print("")
 
     # Read atomic forces of target molecules
     atomic_forces = apdft_proc.read_atomic_forces("%s/ver_atomic_forces.csv" % path)
 
-    # Check
-    print("atomic_forces")
-    print(atomic_forces[:2])
-    print("")
+    # # Check
+    # print("atomic_forces")
+    # print(atomic_forces[:2])
+    # print("")
 
     # Calculate weighted energy by normalized participation participati
     weight_energy = Design_Tools.get_weight_property(energies, norm_part_coeff)
 
-    # Check
-    print("weight_energy")
-    print(weight_energy)
-    print("")
+    # # Check
+    # print("weight_energy")
+    # print(weight_energy)
+    # print("")
 
     # Calculate weighted atomic forces by normalized participation participati
     weight_atomic_forces = Design_Tools.get_weight_atomic_forces(atomic_forces, norm_part_coeff)
 
-    # Check
-    print("weight_atomic_forces")
-    print(weight_atomic_forces)
-    print("")
+    # # Check
+    # print("weight_atomic_forces")
+    # print(weight_atomic_forces)
+    # print("")
 
     return energies, atomic_forces, weight_energy, weight_atomic_forces
 
@@ -437,39 +437,39 @@ class Inverse_Design():
   def design(self):
     """ Perform inverse design """
 
-    # Check
-    print("")
-    print("the number of target molecules")
-    print(self._num_target_mol)
-    print("")
+    # # Check
+    # print("")
+    # print("the number of target molecules")
+    # print(self._num_target_mol)
+    # print("")
 
-    # Check
-    print("design_target_property")
-    print(self._design_target_property)
-    print("")
+    # # Check
+    # print("design_target_property")
+    # print(self._design_target_property)
+    # print("")
 
-    # Check
-    print("sum_free_atom_energies")
-    print(self._sum_free_atom_energies)
-    print("")
+    # # Check
+    # print("sum_free_atom_energies")
+    # print(self._sum_free_atom_energies)
+    # print("")
 
     ### 1. Generate participation coefficients
 
     # Get localized participation coefficients to a reference molecule
     part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, 0)
 
-    # Check
-    print("initial part_coeff")
-    print(part_coeff)
-    print("")
+    # # Check
+    # print("initial part_coeff")
+    # print(part_coeff)
+    # print("")
 
     # Normalize participation coefficients
     norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
 
-    # Check
-    print("norm_part_coeff")
-    print(norm_part_coeff)
-    print("")
+    # # Check
+    # print("norm_part_coeff")
+    # print(norm_part_coeff)
+    # print("")
 
     ### 2. Calculate properties
     ### 2.1. Read energies
@@ -489,15 +489,15 @@ class Inverse_Design():
       atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
         energies, self._sum_free_atom_energies, norm_part_coeff, part_coeff)
 
-      # Check
-      print("atomization_energies")
-      print(atomization_energies)
-      print("")
+      # # Check
+      # print("atomization_energies")
+      # print(atomization_energies)
+      # print("")
 
-      # Check
-      print("weight_atomization_energy")
-      print(weight_atomization_energy)
-      print("")
+      # # Check
+      # print("weight_atomization_energy")
+      # print(weight_atomization_energy)
+      # print("")
 
       # Remove an old results of the design
       if os.path.isfile('design_opt.dat'):
@@ -507,10 +507,10 @@ class Inverse_Design():
       Inverse_Design.update_output(
           self, 0, norm_part_coeff, weight_atomization_energy)
 
-    # Check
-    print("weight_atomization_energy_gradient")
-    print(weight_atomization_energy_gradient)
-    print("")
+    # # Check
+    # print("weight_atomization_energy_gradient")
+    # print(weight_atomization_energy_gradient)
+    # print("")
 
     # ### 3.5. Calculate scale factors D for optimality criteria method
     # scale_factors_D = optimality_criteria.calc_scale_factor(
@@ -548,17 +548,17 @@ class Inverse_Design():
     # part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
     part_coeff, norm_part_coeff = Design_Tools.redistr_part_coeff(part_coeff)
 
-    # Check
-    print("part_coeff")
-    print(part_coeff)
-    print("")
-    print("norm_part_coeff")
-    print(norm_part_coeff)
-    print(norm_part_coeff.sum())
-    print("")
-    print("change of normalized participation coefficients")
-    print(Design_Tools.get_change_norm_part_coeff(temp_norm_part_coeff, norm_part_coeff))
-    print("")
+    # # Check
+    # print("part_coeff")
+    # print(part_coeff)
+    # print("")
+    # print("norm_part_coeff")
+    # print(norm_part_coeff)
+    # print(norm_part_coeff.sum())
+    # print("")
+    # print("change of normalized participation coefficients")
+    # print(Design_Tools.get_change_norm_part_coeff(temp_norm_part_coeff, norm_part_coeff))
+    # print("")
 
 
     # Perform geometry optimization
