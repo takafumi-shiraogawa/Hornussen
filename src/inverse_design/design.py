@@ -443,11 +443,12 @@ class Inverse_Design():
       shutil.rmtree("work/")
 
 
-  def design(self, perturb_ampli):
+  def design(self, perturb_ampli, flag_debug_design):
     """ Perform inverse design
 
     Args:
       perturb_ampli : an amplitude of perturbation for participation coefficients.
+      flag_debug_design : a boolean of debug
     """
 
     # # Check
@@ -583,7 +584,10 @@ class Inverse_Design():
 
     # Set a maximum number of the molecular species
     # TODO: change it from 1. 1 is given for checking performance.
-    max_w_opt_step = 1
+    if flag_debug_design:
+      max_w_opt_step = 1
+    else:
+      max_w_opt_step = 1000
 
     # Loop for design
     for w_opt_step in range(max_w_opt_step):

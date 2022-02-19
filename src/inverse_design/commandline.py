@@ -32,10 +32,12 @@ def ignition_design():
   perturb_ampli = iconf.Option.get_input_params()
   design_target_property = iconf.Option.get_input_design()
 
+  flag_debug_design = iconf.Option.get_debug_params()
+
   derivatives = ds.Inverse_Design(
       geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
 
-  derivatives.design(perturb_ampli)
+  derivatives.design(perturb_ampli, flag_debug_design)
 
 
 @stop_watch

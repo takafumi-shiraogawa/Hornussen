@@ -121,3 +121,21 @@ class Option:
     free_atom_energies = Option.get_free_atom_energies()
 
     return geom_coordinate, mol_target_list, free_atom_energies
+
+
+  def get_debug_params():
+    """ Get debug parameters. """
+
+    is_file = os.path.isfile('lime.conf')
+    if not is_file:
+      raise FileExistsError("lime.conf does not exist.")
+
+    lime_conf = configparser.ConfigParser()
+    lime_conf.read('lime.conf')
+
+    try:
+      debug_design = lime_conf['debug']['debug_design']
+    except:
+      debug_design = False
+
+    return bool(debug_design)
