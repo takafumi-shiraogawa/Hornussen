@@ -343,7 +343,7 @@ class Inverse_Design():
       # Molecular geometry
       for i in range(self._num_atom):
         print("Lime geometry:", 'step%i' % (w_opt_step),
-              'molecule%i' % i, *self._geom_coordinate[i, :], file=f)
+              'atom%i' % i, *self._geom_coordinate[i, :], file=f)
       print("Lime geometry: -----", file = f)
 
       print("", file = f)
