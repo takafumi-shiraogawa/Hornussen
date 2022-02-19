@@ -30,20 +30,20 @@ def stop_watch(func):
 def ignition_design():
   geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
   perturb_ampli = iconf.Option.get_input_params()
-  design_target_property = iconf.Option.get_input_design()
+  design_target_property, flag_design_restart = iconf.Option.get_input_design()
 
   flag_debug_design = iconf.Option.get_debug_params()
 
   derivatives = ds.Inverse_Design(
       geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
 
-  derivatives.design(perturb_ampli, flag_debug_design)
+  derivatives.design(perturb_ampli, flag_debug_design, flag_design_restart)
 
 
 @stop_watch
 def ignition_interpolation(idx_two_mol, type_interp, geom_opt, num_div):
   geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
-  design_target_property = iconf.Option.get_input_design()
+  design_target_property, design_restart = iconf.Option.get_input_design()
 
   derivatives = ds.Inverse_Design(
       geom_coordinate, mol_target_list, design_target_property, free_atom_energies)

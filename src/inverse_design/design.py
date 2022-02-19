@@ -443,12 +443,13 @@ class Inverse_Design():
       shutil.rmtree("work/")
 
 
-  def design(self, perturb_ampli, flag_debug_design):
+  def design(self, perturb_ampli, flag_debug_design, flag_design_restart):
     """ Perform inverse design
 
     Args:
       perturb_ampli : an amplitude of perturbation for participation coefficients.
       flag_debug_design : a boolean of debug
+      flag_design_restart : a boolean of restart
     """
 
     # # Check
