@@ -321,7 +321,8 @@ class Inverse_Design():
     return atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient
 
 
-  def update_output(self, w_opt_step, norm_part_coeff, weight_atomization_energy, file_name = 'design_opt.dat'):
+  def update_output(self, w_opt_step, norm_part_coeff, weight_atomization_energy, \
+    weight_atomization_energy_gradient, file_name = 'design_opt.dat'):
     """ Make and update an output of the design. """
     with open(str(file_name), 'a') as f:
       print('Step', w_opt_step, file=f)
@@ -333,6 +334,11 @@ class Inverse_Design():
       # Atomization energy
       print("Lime atomization energy:", 'step%i' % (w_opt_step),
             weight_atomization_energy, file=f)
+
+      # Atomization energy gradients
+      for i in range(self._num_target_mol):
+        print("Lime atomization energy gradients:", 'step%i' % (w_opt_step),
+              'molecule%i' % i, weight_atomization_energy_gradient[i], file=f)
 
       # Molecular geometry
       for i in range(self._num_atom):
@@ -427,8 +433,8 @@ class Inverse_Design():
         Geom_OPT_Tools.save_geom_opt_hist(idx_num_div + 1)
 
       # Save results of the design
-      Inverse_Design.update_output(
-          self, idx_num_div + 1, interp_norm_part_coeff, weight_atomization_energy, 'interpolation.dat')
+      Inverse_Design.update_output(self, idx_num_div + 1, interp_norm_part_coeff,
+                                   weight_atomization_energy, weight_atomization_energy_gradient, 'interpolation.dat')
 
     if geom_opt:
       shutil.rmtree("work/")
@@ -505,7 +511,7 @@ class Inverse_Design():
 
       # Save results of the design
       Inverse_Design.update_output(
-          self, 0, norm_part_coeff, weight_atomization_energy)
+          self, 0, norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
 
     # # Check
     # print("weight_atomization_energy_gradient")
@@ -603,7 +609,7 @@ class Inverse_Design():
 
       # Save results of the design
       Inverse_Design.update_output(
-          self, w_opt_step + 1, norm_part_coeff, weight_atomization_energy)
+          self, w_opt_step + 1, norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
 
 
       ### Update molecular species
