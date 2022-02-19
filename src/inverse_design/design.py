@@ -76,7 +76,7 @@ class Design_Tools():
     return new_part_coeff, new_norm_part_coeff
 
 
-  def redistr_part_coeff(part_coeff):
+  def redistr_part_coeff(part_coeff, perturb_ampli = None):
     """ Re-distribute participation coefficients """
 
     # Get indexes of nonzero components of paticipation coefficients
@@ -87,7 +87,10 @@ class Design_Tools():
 
     perturb_param = 0.0
     for i, idx in enumerate(idx_nonzero):
-      perturb_param += part_coeff[idx] * 0.01
+      if perturb_ampli == None:
+        perturb_param += part_coeff[idx] * 0.05
+      else:
+        perturb_param += part_coeff[idx] * perturb_ampli
 
     new_part_coeff = part_coeff
     for i in range(len(part_coeff)):
