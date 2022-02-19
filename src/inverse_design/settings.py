@@ -16,7 +16,7 @@ class Option:
     """
     is_file = os.path.isfile('lime.conf')
     if not is_file:
-      raise FileExistsError("lime.conf does not excist.")
+      raise FileExistsError("lime.conf does not exist.")
 
     lime_conf = configparser.ConfigParser()
     lime_conf.read('lime.conf')
@@ -38,7 +38,7 @@ class Option:
 
     is_file = os.path.isfile('lime.conf')
     if not is_file:
-      raise FileExistsError("lime.conf does not excist.")
+      raise FileExistsError("lime.conf does not exist.")
 
     lime_conf = configparser.ConfigParser()
     lime_conf.read('lime.conf')
@@ -59,7 +59,7 @@ class Option:
     """
     is_file = os.path.isfile('lime.conf')
     if not is_file:
-      raise FileExistsError("lime.conf does not excist.")
+      raise FileExistsError("lime.conf does not exist.")
 
     lime_conf = configparser.ConfigParser()
     lime_conf.read('lime.conf')
