@@ -33,6 +33,24 @@ class Option:
     return init_mol_geom_path, target_mol_path
 
 
+  def get_input_params():
+    """ Get input parameters. """
+
+    is_file = os.path.isfile('lime.conf')
+    if not is_file:
+      raise FileExistsError("lime.conf does not excist.")
+
+    lime_conf = configparser.ConfigParser()
+    lime_conf.read('lime.conf')
+
+    try:
+      perturb_ampli = lime_conf['design']['design_perturb_ampli']
+    except:
+      perturb_ampli = 0.05
+
+    return float(perturb_ampli)
+
+
   def get_input_design():
     """ Get an input for design from the configuration file.
 

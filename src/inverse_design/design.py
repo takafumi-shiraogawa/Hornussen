@@ -443,8 +443,12 @@ class Inverse_Design():
       shutil.rmtree("work/")
 
 
-  def design(self):
-    """ Perform inverse design """
+  def design(self, perturb_ampli):
+    """ Perform inverse design
+
+    Args:
+      perturb_ampli : an amplitude of perturbation for participation coefficients.
+    """
 
     # # Check
     # print("")
@@ -555,7 +559,7 @@ class Inverse_Design():
     temp_norm_part_coeff = np.copy(norm_part_coeff)
 
     # part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
-    part_coeff, norm_part_coeff = Design_Tools.redistr_part_coeff(part_coeff)
+    part_coeff, norm_part_coeff = Design_Tools.redistr_part_coeff(part_coeff, perturb_ampli)
 
     # # Check
     # print("part_coeff")

@@ -29,12 +29,13 @@ def stop_watch(func):
 @stop_watch
 def ignition_design():
   geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
+  perturb_ampli = iconf.Option.get_input_params()
   design_target_property = iconf.Option.get_input_design()
 
   derivatives = ds.Inverse_Design(
       geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
 
-  derivatives.design()
+  derivatives.design(perturb_ampli)
 
 
 @stop_watch
