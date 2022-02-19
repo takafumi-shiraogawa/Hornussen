@@ -119,37 +119,17 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
     # Read potential energies of target molecules
     energies = apdft_proc.read_potential_energies("%s/energies.csv" % path)
 
-    # # Check
-    # print("energies")
-    # print(energies)
-    # print("")
-
     # Read atomic forces of target molecules
     atomic_forces = apdft_proc.read_atomic_forces(
         "%s/ver_atomic_forces.csv" % path)
-
-    # # Check
-    # print("atomic_forces")
-    # print(atomic_forces[:2])
-    # print("")
 
     # Calculate weighted energy by normalized participation participati
     weight_energy = Inverse_Design.Design_Tools.get_weight_property(
         energies, self._norm_part_coeff)
 
-    # # Check
-    # print("weight_energy")
-    # print(weight_energy)
-    # print("")
-
     # Calculate weighted atomic forces by normalized participation participati
     weight_atomic_forces = Inverse_Design.Design_Tools.get_weight_atomic_forces(
         atomic_forces, self._norm_part_coeff)
-
-    # # Check
-    # print("weight_atomic_forces")
-    # print(weight_atomic_forces)
-    # print("")
 
     return weight_energy, weight_atomic_forces
 
