@@ -347,6 +347,47 @@ class Inverse_Design():
         print(*self._geom_coordinate[idx, :], file=fh)
 
 
+  def read_restart_file(self):
+    """ Generate a restart file. """
+    with open("restart_design.dat", mode='r') as fh:
+      lines = fh.readlines()
+
+    part_coeff = []
+    coordinates = []
+
+    flag_part_coeff = False
+    flag_mol_geom = False
+
+    for idx_line, line in enumerate(lines):
+      line = line.strip()
+
+      if ":" in line:
+        if line == "Participation coefficients:":
+          idx_part_coeff = idx_line
+          flag_part_coeff = True
+        elif line == "Molecular geometry:":
+          idx_mol_geom = idx_line
+          flag_mol_geom = True
+        continue
+
+      # Read a design step
+      if idx_line == 1:
+        design_step = int(line)
+
+      if flag_part_coeff:
+        # Read participation coefficients
+        if idx_line > idx_part_coeff and idx_line <= idx_part_coeff + self._num_target_mol:
+          part_coeff.append(float(line))
+
+      if flag_mol_geom:
+        # Read nuclear coordinates
+        if idx_line > idx_mol_geom:
+          parts = line.split()
+          coordinates.append([float(_) for _ in parts[0:3]])
+
+    return design_step - 1, np.array(part_coeff), np.array(coordinates)
+
+
   def interpolation(self, idx_two_mols, type_interp, geom_opt, num_div = 10):
     """ Perform interpolation between two real molecules.
 
@@ -519,8 +560,14 @@ class Inverse_Design():
     else:
       max_w_opt_step = 1000
 
+    if flag_design_restart:
+      init_w_opt_step, part_coeff, self._geom_coordinate = Inverse_Design.read_restart_file(self)
+      norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
+    else:
+      init_w_opt_step = 0
+
     # Loop for design
-    for w_opt_step in range(max_w_opt_step):
+    for w_opt_step in range(init_w_opt_step, max_w_opt_step):
       # Note that self._mol_target_list[0] is not used in geometry optimization.
       self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
           self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
@@ -560,4 +607,5 @@ class Inverse_Design():
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
           part_coeff, weight_atomization_energy_gradient)
 
-    shutil.rmtree("work/")
+    if os.path.isdir("work/"):
+      shutil.rmtree("work/")
