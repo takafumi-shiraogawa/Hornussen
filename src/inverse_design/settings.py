@@ -67,14 +67,14 @@ class Option:
     design_target_property = lime_conf['design']['design_target_property']
 
     try:
-      design_restart = lime_conf['design']['design_restart']
+      design_restart = bool(lime_conf['design']['design_restart'])
     except:
       design_restart = False
 
     if design_target_property not in ['atomization_energy']:
       raise ValueError("design_target_property must be atomization_energy in lime.conf.")
 
-    return design_target_property, bool(design_restart)
+    return design_target_property, design_restart
 
 
   def get_free_atom_energies():
