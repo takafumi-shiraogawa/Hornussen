@@ -479,11 +479,12 @@ class Inverse_Design():
       shutil.rmtree("work/")
 
 
-  def design(self, perturb_ampli, flag_debug_design, flag_design_restart):
+  def design(self, perturb_ampli, max_design_opt_iter, flag_debug_design, flag_design_restart):
     """ Perform inverse design
 
     Args:
       perturb_ampli : an amplitude of perturbation for participation coefficients.
+      max_design_opt_iter : an scalar of the maximum iteration number of design optimization.
       flag_debug_design : a boolean of debug
       flag_design_restart : a boolean of restart
     """
@@ -558,7 +559,7 @@ class Inverse_Design():
     if flag_debug_design:
       max_w_opt_step = 1
     else:
-      max_w_opt_step = 1000
+      max_w_opt_step = max_design_opt_iter
 
     if flag_design_restart:
       init_w_opt_step, part_coeff, self._geom_coordinate = Inverse_Design.read_restart_file(self)
