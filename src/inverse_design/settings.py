@@ -73,8 +73,12 @@ class Option:
 
     try:
       design_restart = lime_conf['design']['design_restart']
+      if design_restart == "True":
+        design_restart = bool(design_restart)
+      elif design_restart == "False":
+        design_restart = bool("")
     except:
-      design_restart = False
+      design_restart = bool("")
 
     if design_target_property not in ['atomization_energy']:
       raise ValueError("design_target_property must be atomization_energy in lime.conf.")
