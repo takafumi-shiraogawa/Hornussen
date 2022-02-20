@@ -433,7 +433,7 @@ class Inverse_Design():
     """
 
     # Restart design
-    if flag_debug_design:
+    if flag_design_restart:
       if os.path.isdir("work/"):
         shutil.rmtree("work/")
 
