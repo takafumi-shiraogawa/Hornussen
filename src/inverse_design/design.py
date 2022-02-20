@@ -332,6 +332,21 @@ class Inverse_Design():
       print("", file = f)
 
 
+  def gener_restart_file(self, design_step, part_coeff):
+    """ Generate a restart file. """
+    with open("restart_design.dat", mode='w') as fh:
+      print("Design step:", file=fh)
+      print(design_step, file=fh)
+
+      print("Participation coefficients:", file=fh)
+      for idx in range(self._num_target_mol):
+        print(part_coeff[idx], file=fh)
+
+      print("Molecular geometry:", file=fh)
+      for idx in range(self._num_atom):
+        print(*self._geom_coordinate[idx, :], file=fh)
+
+
   def interpolation(self, idx_two_mols, type_interp, geom_opt, num_div = 10):
     """ Perform interpolation between two real molecules.
 
@@ -539,17 +554,7 @@ class Inverse_Design():
 
       # Save a data to restart design
       # design step, participation coefficients, molecular geometry
-      with open("restart_design.dat", mode='w') as fh:
-        print("Design step:", file=fh)
-        print(w_opt_step, file=fh)
-
-        print("Participation coefficients:", file=fh)
-        for idx in range(self._num_target_mol):
-          print(part_coeff[idx], file=fh)
-
-        print("Molecular geometry:", file=fh)
-        for idx in range(self._num_atom):
-          print(*self._geom_coordinate[idx, :], file=fh)
+      Inverse_Design.gener_restart_file(self, w_opt_step + 1, part_coeff)
 
       ### Update molecular species
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
