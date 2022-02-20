@@ -385,7 +385,7 @@ class Inverse_Design():
           parts = line.split()
           coordinates.append([float(_) for _ in parts[0:3]])
 
-    return design_step - 1, np.array(part_coeff), np.array(coordinates)
+    return design_step, np.array(part_coeff), np.array(coordinates)
 
 
   def interpolation(self, idx_two_mols, type_interp, geom_opt, num_div = 10):
@@ -550,10 +550,6 @@ class Inverse_Design():
     # Perform geometry optimization
     print("Perform geometry optimization")
 
-    # Remove an old directory for saving geometry optimization histories.
-    if os.path.isdir("geom_opt_hist/"):
-      shutil.rmtree("geom_opt_hist/")
-
     # Set a maximum number of the molecular species
     # TODO: change it from 1. 1 is given for checking performance.
     if flag_debug_design:
@@ -564,10 +560,13 @@ class Inverse_Design():
     if flag_design_restart:
       init_w_opt_step, part_coeff, self._geom_coordinate = Inverse_Design.read_restart_file(self)
       norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
-      if os.path.isdir("geom_opt_hist/geom_opt-%i/" % init_w_opt_step):
-        shutil.rmtree("geom_opt_hist/geom_opt-%i/" % init_w_opt_step)
+      if os.path.isdir("geom_opt_hist/geom_opt-%i/" % init_w_opt_step + 1):
+        shutil.rmtree("geom_opt_hist/geom_opt-%i/" % init_w_opt_step + 1)
     else:
       init_w_opt_step = 0
+      # Remove an old directory for saving geometry optimization histories.
+      if os.path.isdir("geom_opt_hist/"):
+        shutil.rmtree("geom_opt_hist/")
 
     # Loop for design
     for w_opt_step in range(init_w_opt_step, max_w_opt_step):
