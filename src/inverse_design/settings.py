@@ -48,7 +48,12 @@ class Option:
     except:
       perturb_ampli = 0.05
 
-    return float(perturb_ampli)
+    try:
+      max_design_opt_iter = lime_conf['design']['design_max_opt_iter']
+    except:
+      max_design_opt_iter = 1000
+
+    return float(perturb_ampli), int(max_design_opt_iter)
 
 
   def get_input_design():
@@ -67,7 +72,7 @@ class Option:
     design_target_property = lime_conf['design']['design_target_property']
 
     try:
-      design_restart = bool(lime_conf['design']['design_restart'])
+      design_restart = lime_conf['design']['design_restart']
     except:
       design_restart = False
 
@@ -143,4 +148,4 @@ class Option:
     except:
       debug_design = False
 
-    return bool(debug_design)
+    return debug_design
