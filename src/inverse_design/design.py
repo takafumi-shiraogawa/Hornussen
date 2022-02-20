@@ -432,6 +432,20 @@ class Inverse_Design():
       flag_design_restart : a boolean of restart
     """
 
+    # Restart design
+    if flag_debug_design:
+      if os.path.isdir("work/"):
+        shutil.rmtree("work/")
+
+      if not os.path.isdir("geom_opt_hist/"):
+        raise Exception("To restart design, geom_opt_hist/ is required.")
+
+      if os.path.isfile('design_opt.dat'):
+        raise Exception("To restart design, design_opt.dat is required.")
+
+      if os.path.isfile('elapsed_time.dat'):
+        raise Exception("To restart design, elapsed_time.dat is required.")
+
     ### 1. Generate participation coefficients
 
     # Get localized participation coefficients to a reference molecule
