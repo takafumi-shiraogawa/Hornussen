@@ -537,6 +537,19 @@ class Inverse_Design():
       Inverse_Design.update_output(
           self, w_opt_step + 1, norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
 
+      # Save a data to restart design
+      # design step, participation coefficients, molecular geometry
+      with open("restart_design.dat", mode='w') as fh:
+        print("Design step:", file=fh)
+        print(w_opt_step, file=fh)
+
+        print("Participation coefficients:", file=fh)
+        for idx in range(self._num_target_mol):
+          print(part_coeff[idx], file=fh)
+
+        print("Molecular geometry:", file=fh)
+        for idx in range(self._num_atom):
+          print(*self._geom_coordinate[idx, :], file=fh)
 
       ### Update molecular species
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
