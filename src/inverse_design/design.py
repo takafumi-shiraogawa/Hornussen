@@ -563,6 +563,8 @@ class Inverse_Design():
     if flag_design_restart:
       init_w_opt_step, part_coeff, self._geom_coordinate = Inverse_Design.read_restart_file(self)
       norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
+      if os.path.isdir("geom_opt_hist/geom_opt-%i/" % init_w_opt_step):
+        shutil.rmtree("geom_opt_hist/geom_opt-%i/" % init_w_opt_step)
     else:
       init_w_opt_step = 0
 
