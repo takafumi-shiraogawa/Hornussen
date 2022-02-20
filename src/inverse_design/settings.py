@@ -145,7 +145,13 @@ class Option:
 
     try:
       debug_design = lime_conf['debug']['debug_design']
+      if debug_design == "True":
+        debug_design = bool(debug_design)
+      elif debug_design == "False":
+        debug_design = bool("")
+      else:
+        raise ValueError("debug_design is invalid.")
     except:
-      debug_design = False
+      debug_design = bool("")
 
     return debug_design
