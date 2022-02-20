@@ -29,6 +29,15 @@ Outputs:
   geom_opt_hist/
 
 
+Restart option
+-------------------
+
+The following outputs of the terminated design should be retained:
+  design_opt.dat
+  restart_design.dat
+  geom_opt_hist/
+
+
 Flowchart
 -------------------
 
