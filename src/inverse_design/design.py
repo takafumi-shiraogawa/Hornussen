@@ -221,7 +221,7 @@ class Geom_OPT_Tools():
   def save_geom_opt_hist(opt_step):
     """ Save a geometry optimization history. """
 
-    path = "geom_opt_hist/geom_opt-%s" % opt_step
+    path = "geom_opt_hist/geom_opt-%s" % str(opt_step)
 
     shutil.copytree('./work', path)
 
