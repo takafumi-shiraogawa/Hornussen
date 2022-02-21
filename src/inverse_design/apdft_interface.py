@@ -134,6 +134,68 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
     return weight_energy, weight_atomic_forces
 
 
+  def write_avoid_calc_input():
+    open("work/temp/imp_mod_cli1.sh", mode='w')
+    open("work/temp/imp_mod_cli2.sh", mode='w')
+    with open("work/temp/commands.sh", mode='w') as fh:
+      print("( : )", file=fh)
+
+
+  def check_former_calc():
+    try:
+      geo = os.listdir(path='./geom_opt_hist/')
+      geo_numbers = []
+      for item in geo:
+        item = item.replace('geom_opt-', '')
+        geo_numbers.append(int(item))
+      last_geom_opt_num = max(geo_numbers)
+    except:
+      last_geom_opt_num = 0
+
+    return last_geom_opt_num
+
+
+  def copy_precalculated_data(last_geom_opt_num):
+    # Set a target directry
+    copy_directory = "work/temp"
+
+    # Copy energies.csv
+    copyfile = "./geom_opt_hist/geom_opt-%s/temp/energies.csv" % str(
+        last_geom_opt_num)
+    shutil.copy(copyfile, copy_directory)
+
+    # Copy ver_atomic_forces.csv
+    copyfile = "./geom_opt_hist/geom_opt-%s/temp/ver_atomic_forces.csv" % str(
+        last_geom_opt_num)
+    shutil.copy(copyfile, copy_directory)
+
+
+  def write_input(self, atoms, properties=None, system_changes=None):
+    """ Write inputs of a calculation. """
+    if os.path.isdir("work/temp/"):
+      shutil.rmtree("work/temp/")
+
+    if self.num_opt_step is None:
+      self.num_opt_step = 1
+    else:
+      self.num_opt_step += 1
+
+    # Make a working directory
+    APDFT.handle_APDFT.make_work()
+
+    last_geom_opt_num = ASE_APDFT_Interface.check_former_calc()
+    # If this is a first step of geometry optimization or
+    # geometry optimization has not been performed yet
+    if self.num_opt_step != 1 or last_geom_opt_num == 0:
+      APDFT.handle_APDFT.copy_ingredients()
+    else:
+      ASE_APDFT_Interface.write_avoid_calc_input()
+      ASE_APDFT_Interface.copy_precalculated_data(last_geom_opt_num)
+
+    # handle_APDFT.gener_inputs(coord)
+    APDFT.handle_APDFT.gener_inputs(self.nuclear_numbers, self.atoms.positions)
+
+
   def read_results(self):
     """ Read calculated energy and atomic forces. """
     path = 'work/temp'
