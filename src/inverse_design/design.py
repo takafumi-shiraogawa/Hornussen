@@ -308,21 +308,21 @@ class Inverse_Design():
       print('Step', w_opt_step, file=f)
       # Molecule
       for i in range(self._num_target_mol):
-        print("Lime molecule:", 'step%i' % (w_opt_step),
+        print("Lime molecule:", 'step%s' % str(w_opt_step),
               'molecule%i' % i, norm_part_coeff[i], file=f)
 
       # Atomization energy
-      print("Lime atomization energy:", 'step%i' % (w_opt_step),
+      print("Lime atomization energy:", 'step%s' % str(w_opt_step),
             weight_atomization_energy, file=f)
 
       # Atomization energy gradients
       for i in range(self._num_target_mol):
-        print("Lime atomization energy gradients:", 'step%i' % (w_opt_step),
+        print("Lime atomization energy gradients:", 'step%s' % str(w_opt_step),
               'molecule%i' % i, weight_atomization_energy_gradient[i], file=f)
 
       # Molecular geometry
       for i in range(self._num_atom):
-        print("Lime geometry:", 'step%i' % (w_opt_step),
+        print("Lime geometry:", 'step%s' % str(w_opt_step),
               'atom%i' % i, *self._geom_coordinate[i, :], file=f)
       print("Lime geometry: -----", file = f)
 
@@ -615,5 +615,50 @@ class Inverse_Design():
         flag_design_opt_conv = True
         break
 
+      # Check
+      if w_opt_step == max_w_opt_step - 1:
+        flag_design_opt_conv = True
+        break
+
     if os.path.isdir("work/"):
       shutil.rmtree("work/")
+
+
+    ### Calculate a designed molecule
+    # If design optimization converges
+    if flag_design_opt_conv:
+      # Round off normalized participation coefficients
+      norm_part_coeff = np.round(norm_part_coeff)
+
+      # Perform geometry optimization
+      self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
+          self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
+
+      # Read energies
+      # Read atomic forces
+      # Calculate weighted properties
+      # Calculate weighted potential energy
+      # Calculate weighted atomic forces
+      energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+          self, './work/temp', norm_part_coeff)
+
+      # If the target property to be designed is atomization energy
+      if self._design_target_property == 'atomization_energy':
+
+        # Calculate atomization energies
+        # Calculate weighted atomization energy
+        # Calculate gradients of atomization energies with respect to participation coefficients
+        atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+            energies, self._sum_free_atom_energies, norm_part_coeff, norm_part_coeff)
+
+      # Save work/ for geometry optimization
+      Geom_OPT_Tools.save_geom_opt_hist('real')
+
+      # Save results of the design
+      Inverse_Design.update_output(
+          self, 'real', norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
+
+    # If design optimization does not converge
+    else:
+      with open('design_opt.dat', 'a') as f:
+        print('Design optimization did not converge.', file=f)
