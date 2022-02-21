@@ -497,10 +497,10 @@ class Inverse_Design():
       if not os.path.isdir("geom_opt_hist/"):
         raise Exception("To restart design, geom_opt_hist/ is required.")
 
-      if os.path.isfile('design_opt.dat'):
+      if not os.path.isfile('design_opt.dat'):
         raise Exception("To restart design, design_opt.dat is required.")
 
-      if os.path.isfile('elapsed_time.dat'):
+      if not os.path.isfile('elapsed_time.dat'):
         raise Exception("To restart design, elapsed_time.dat is required.")
 
     ### 1. Generate participation coefficients
