@@ -607,7 +607,7 @@ class Inverse_Design():
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
           part_coeff, weight_atomization_energy_gradient)
 
-      # Save a data to restart design
+      # Save data for restarting design
       # design step, participation coefficients, molecular geometry
       Inverse_Design.gener_restart_file(self, w_opt_step + 1, part_coeff)
 
