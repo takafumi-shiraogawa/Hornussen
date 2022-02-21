@@ -82,9 +82,6 @@ class Design_Tools():
     # Get indexes of nonzero components of paticipation coefficients
     idx_nonzero = np.nonzero(part_coeff)
 
-    # Calculate a sum of participation coefficients
-    sum_part_coeff = np.sum(part_coeff)
-
     perturb_param = 0.0
     for i, idx in enumerate(idx_nonzero):
       if perturb_ampli == None:
@@ -100,10 +97,10 @@ class Design_Tools():
         new_part_coeff[i] -= perturb_param
 
     # Normalize new participation coefficients
-    # new_norm_part_coeff = Design_Tools.norm_part_coeff(new_part_coeff)
+    new_norm_part_coeff = Design_Tools.norm_part_coeff(new_part_coeff)
+
     if len(idx_nonzero) != 1:
       raise ValueError("Initial participation coefficients are not valid.")
-    new_norm_part_coeff = part_coeff / sum_part_coeff
 
     return new_part_coeff, new_norm_part_coeff
 
