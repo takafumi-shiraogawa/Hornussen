@@ -530,13 +530,14 @@ class Inverse_Design():
       atomization_energies, weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
         energies, self._sum_free_atom_energies, norm_part_coeff, part_coeff)
 
-      # Remove an old results of the design
-      if os.path.isfile('design_opt.dat'):
-        os.remove('design_opt.dat')
+      if not flag_design_restart:
+        # Remove an old results of the design
+        if os.path.isfile('design_opt.dat'):
+          os.remove('design_opt.dat')
 
-      # Save results of the design
-      Inverse_Design.update_output(
-          self, 0, norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
+        # Save results of the design
+        Inverse_Design.update_output(
+            self, 0, norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
 
 
     ### 4. Perturb the molecule and calculate weighted properties
