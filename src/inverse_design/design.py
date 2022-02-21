@@ -542,8 +542,8 @@ class Inverse_Design():
 
     ### 4. Perturb the molecule and calculate weighted properties
     ### 4.1. Calculate weighted potential energy
-    # Save for check change of normalized participation coefficients
-    temp_norm_part_coeff = np.copy(norm_part_coeff)
+    # # Save for check change of normalized participation coefficients
+    # temp_norm_part_coeff = np.copy(norm_part_coeff)
 
     # part_coeff, norm_part_coeff = Design_Tools.perturb_part_coeff(part_coeff)
     part_coeff, norm_part_coeff = Design_Tools.redistr_part_coeff(part_coeff, perturb_ampli)
