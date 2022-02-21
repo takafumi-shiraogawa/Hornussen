@@ -602,13 +602,14 @@ class Inverse_Design():
       Inverse_Design.update_output(
           self, w_opt_step + 1, norm_part_coeff, weight_atomization_energy, weight_atomization_energy_gradient)
 
-      # Save a data to restart design
-      # design step, participation coefficients, molecular geometry
-      Inverse_Design.gener_restart_file(self, w_opt_step + 1, part_coeff)
 
       ### Update molecular species
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
           part_coeff, weight_atomization_energy_gradient)
+
+      # Save a data to restart design
+      # design step, participation coefficients, molecular geometry
+      Inverse_Design.gener_restart_file(self, w_opt_step + 1, part_coeff)
 
     if os.path.isdir("work/"):
       shutil.rmtree("work/")
