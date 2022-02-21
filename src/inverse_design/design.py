@@ -476,12 +476,13 @@ class Inverse_Design():
       shutil.rmtree("work/")
 
 
-  def design(self, perturb_ampli, max_design_opt_iter, flag_debug_design, flag_design_restart):
+  def design(self, perturb_ampli, max_design_opt_iter, design_opt_criter, flag_debug_design, flag_design_restart):
     """ Perform inverse design
 
     Args:
       perturb_ampli : an amplitude of perturbation for participation coefficients.
       max_design_opt_iter : an scalar of the maximum iteration number of design optimization.
+      design_opt_criter : an scaler of the design optimization criterion.
       flag_debug_design : a boolean of debug
       flag_design_restart : a boolean of restart
     """
@@ -607,6 +608,12 @@ class Inverse_Design():
       # Save data for restarting design
       # design step, participation coefficients, molecular geometry
       Inverse_Design.gener_restart_file(self, w_opt_step + 1, part_coeff)
+
+
+      ### Convergence
+      if np.max(np.abs(weight_atomization_energy_gradient)) < design_opt_criter:
+        flag_design_opt_conv = True
+        break
 
     if os.path.isdir("work/"):
       shutil.rmtree("work/")

@@ -53,7 +53,12 @@ class Option:
     except:
       max_design_opt_iter = 1000
 
-    return float(perturb_ampli), int(max_design_opt_iter)
+    try:
+      design_opt_criter = lime_conf['design']['design_opt_criter']
+    except:
+      design_opt_criter = 0.0001
+
+    return float(perturb_ampli), int(max_design_opt_iter), abs(float(design_opt_criter))
 
 
   def get_input_design():
