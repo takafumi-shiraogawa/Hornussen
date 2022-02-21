@@ -156,7 +156,7 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
 
 
   def copy_precalculated_data(last_geom_opt_num):
-    # Set a target directry
+    # Set a target directory
     copy_directory = "work/temp"
 
     # Copy energies.csv
