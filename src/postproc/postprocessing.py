@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
+import numpy as np
 
 class figure_proc():
 
@@ -15,8 +16,8 @@ class figure_proc():
 
     fig, ax = plt.subplots(figsize=(6, 4), tight_layout=True)
 
-    if len(data_y[1]) == 1:
-      ax.plot(data_x, data_y, label=label_data, marker="o")
+    if data_y.ndim == 1:
+      ax.plot(data_x, data_y, marker="o")
     else:
       for i in range(len(data_y)):
         if i < 2:
@@ -47,13 +48,15 @@ class figure_proc():
     fmt = '%.2f'
     yticks = mtick.FormatStrFormatter(fmt)
     ax.yaxis.set_major_formatter(yticks)
-    fmt = '%.1f'
-    xticks = mtick.FormatStrFormatter(fmt)
-    ax.xaxis.set_major_formatter(xticks)
+    if not isinstance(data_x[0], np.int64):
+      fmt = '%.1f'
+      xticks = mtick.FormatStrFormatter(fmt)
+      ax.xaxis.set_major_formatter(xticks)
 
     fig.show()
 
-    ax.legend(loc = "upper right", fontsize=12)
+    if data_y.ndim != 1:
+      ax.legend(loc = "upper right", fontsize=12)
 
     if lim_x != [] and lim_y != []:
       plt.xlim(lim_x)
