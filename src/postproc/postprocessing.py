@@ -53,10 +53,20 @@ class figure_proc():
       xticks = mtick.FormatStrFormatter(fmt)
       ax.xaxis.set_major_formatter(xticks)
 
+    ymin = min(lim_y)
+    ymax = max(lim_y)
+
+    plt.vlines(0, ymin, ymax, colors='black', linewidth=0.5)
+    plt.ylim(ymin, ymax)
+    plt.vlines(250, ymin, ymax, colors='black', linewidth=0.5)
+    plt.ylim(ymin, ymax)
+    plt.vlines(1203, ymin, ymax, colors='black', linewidth=0.5)
+    plt.ylim(ymin, ymax)
+
     fig.show()
 
     if data_y.ndim != 1:
-      ax.legend(loc = "upper right", fontsize=12)
+      ax.legend(loc = "center", fontsize=18)
 
     if lim_x != [] and lim_y != []:
       plt.xlim(lim_x)

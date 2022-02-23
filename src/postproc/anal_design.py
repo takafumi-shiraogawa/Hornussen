@@ -81,9 +81,9 @@ class analyze_design():
     step = np.array(step)
     norm_part_coeff = np.array(norm_part_coeff)
 
-    label_data = ['$a_{BF}$', '$a_{CO}$']
+    label_data = ['$a_{\mathrm{BF}}$', '$a_{\mathrm{CO}}$']
     label_x = 'Design step'
-    label_y = '$a_{i}$'
+    label_y = 'Molecular density $a_{i}$'
 
     range_x = [0, 400, 800, 1200]
     range_y = [-0.25, 0, 0.25, 0.5, 0.75, 1, 1.25]
