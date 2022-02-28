@@ -28,9 +28,11 @@ def stop_watch(func):
 
 @stop_watch
 def ignition_design():
-  geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
+  geom_coordinate, mol_target_list = iconf.Option.get_inputs()
   perturb_ampli, max_design_opt_iter, design_opt_criter = iconf.Option.get_input_params()
-  design_target_property, flag_design_restart = iconf.Option.get_input_design()
+  design_target_property, flag_design_restart, design_calc_level = iconf.Option.get_input_design()
+  if design_target_property == 'atomization_energy':
+    free_atom_energies = iconf.Option.get_free_atom_energies(design_calc_level)
 
   flag_debug_design = iconf.Option.get_debug_params()
 

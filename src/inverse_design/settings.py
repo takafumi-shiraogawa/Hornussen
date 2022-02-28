@@ -66,6 +66,7 @@ class Option:
 
     Returns:
       design_target_property : A string of the target property to be designed.
+      design_calc_level      : A string that specifies a calculation level of free atom energies.
     """
     is_file = os.path.isfile('lime.conf')
     if not is_file:
@@ -88,10 +89,34 @@ class Option:
     if design_target_property not in ['atomization_energy']:
       raise ValueError("design_target_property must be atomization_energy in lime.conf.")
 
-    return design_target_property, design_restart
+    if design_target_property == 'atomization_energy':
+      try:
+        design_calc_level = lime_conf['design']['design_calc_level']
+      except:
+        raise ValueError("design_calc_level must be given in lime.conf.")
+
+    return design_target_property, design_restart, design_calc_level
 
 
-  def get_free_atom_energies():
+  def get_free_atom_energies(design_calc_level):
+    """ Get free atom energies.
+
+    Args:
+      design_calc_level  : A string that specifies a calculation level of free atom energies.
+    Returns:
+      free_atom_energies : A ('atom', 'atom_energy') dictionary. [nondimension, Hartree]
+    """
+    if design_calc_level.lower() == 'ccsd/def2-tzvp' or design_calc_level.lower() == 'ccsd/def2tzvp':
+      type_atom_energy = 'pyscf_CCSD_highspin'
+    elif design_calc_level.lower() == 'hf/def2-tzvp' or design_calc_level.lower() == 'hf/def2tzvp':
+      type_atom_energy = 'pyscf_HF_highspin'
+    elif design_calc_level.lower() == 'pbe0/def2-tzvp' or design_calc_level.lower() == 'pbe0/def2tzvp':
+      type_atom_energy = 'pyscf_PBE0_highspin'
+    elif design_calc_level.lower() == 'b3lyp/def2-tzvp' or design_calc_level.lower() == 'b3lyp/def2tzvp':
+      type_atom_energy = 'pyscf_B3LYP_highspin'
+    else:
+      raise ValueError("Free atom energies in %s have not been calculated yet." % design_calc_level.lower())
+
     path_data = os.path.dirname(__file__).replace('src/inverse_design', 'data')
     path_free_atom_energies = "%s%s" % (str(path_data), "/free_atom_energies.csv")
     file_free_atom_energies = open(path_free_atom_energies, "r")
@@ -100,8 +125,6 @@ class Option:
     dict_dict_free_atom_energies = {}
     dict_dict_free_atom_energies['atom'] = []
     dict_dict_free_atom_energies['atom_energy'] = []
-
-    type_atom_energy = 'pyscf_CCSD_highspin'
 
     for i, row in enumerate(dict_free_atom_energies):
       dict_dict_free_atom_energies['atom'].append(int(row['atom']))
@@ -136,10 +159,7 @@ class Option:
     #   if nuclear_numbers[i] != mol_target_list[0][i]:
     #     raise ValueError("A list of target molecules needs to have a reference molecule in the first line.")
 
-    # Read free atom energies
-    free_atom_energies = Option.get_free_atom_energies()
-
-    return geom_coordinate, mol_target_list, free_atom_energies
+    return geom_coordinate, mol_target_list
 
 
   def get_debug_params():
