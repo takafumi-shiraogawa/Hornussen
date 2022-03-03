@@ -86,14 +86,18 @@ class Option:
     except:
       design_restart = bool("")
 
-    if design_target_property not in ['atomization_energy']:
-      raise ValueError("design_target_property must be atomization_energy in lime.conf.")
+    if design_target_property not in ['atomization_energy', 'total_energy']:
+      raise ValueError(
+          "design_target_property must be atomization_energy or total_energy in lime.conf.")
 
     if design_target_property == 'atomization_energy':
       try:
         design_calc_level = lime_conf['design']['design_calc_level']
       except:
-        raise ValueError("design_calc_level must be given in lime.conf.")
+        raise ValueError(
+            "design_calc_level for atomization energy must be given in lime.conf.")
+    else:
+      design_calc_level = None
 
     return design_target_property, design_restart, design_calc_level
 

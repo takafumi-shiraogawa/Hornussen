@@ -36,8 +36,12 @@ def ignition_design():
 
   flag_debug_design = iconf.Option.get_debug_params()
 
-  derivatives = ds.Inverse_Design(
-      geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
+  if design_target_property == 'atomization_energy':
+    derivatives = ds.Inverse_Design(
+        geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
+  elif design_target_property == 'total_energy':
+    derivatives = ds.Inverse_Design(
+        geom_coordinate, mol_target_list, design_target_property)
 
   derivatives.design(perturb_ampli, max_design_opt_iter,
                      design_opt_criter, flag_debug_design, flag_design_restart)
