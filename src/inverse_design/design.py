@@ -496,7 +496,8 @@ class Inverse_Design():
       shutil.rmtree("work/")
 
 
-  def design(self, perturb_ampli, max_design_opt_iter, design_opt_criter, flag_debug_design, flag_design_restart):
+  def design(self, perturb_ampli, max_design_opt_iter, design_opt_criter, flag_debug_design, \
+    flag_design_restart, flag_scale_gradient):
     """ Perform inverse design
 
     Args:

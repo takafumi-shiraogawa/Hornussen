@@ -86,6 +86,15 @@ class Option:
     except:
       design_restart = bool("")
 
+    try:
+      design_flag_scale_gradient = lime_conf['design']['design_scale_gradient']
+      if design_flag_scale_gradient == "True":
+        design_flag_scale_gradient = bool(design_flag_scale_gradient)
+      elif design_flag_scale_gradient == "False":
+        design_flag_scale_gradient = bool("")
+    except:
+      design_flag_scale_gradient = bool("")
+
     if design_target_property not in ['atomization_energy', 'total_energy']:
       raise ValueError(
           "design_target_property must be atomization_energy or total_energy in lime.conf.")
@@ -99,7 +108,7 @@ class Option:
     else:
       design_calc_level = None
 
-    return design_target_property, design_restart, design_calc_level
+    return design_target_property, design_restart, design_calc_level, design_flag_scale_gradient
 
 
   def get_free_atom_energies(design_calc_level):
