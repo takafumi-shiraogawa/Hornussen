@@ -125,11 +125,8 @@ class Design_Tools():
     return new_part_coeff, norm_new_part_coeff
 
 
-  def calc_change_ratio(part_coeff, gradient, scale_gradient):
+  def calc_change_ratio(part_coeff, norm_part_coeff, gradient, scale_gradient):
     """ Calculate a sum of changes of normalized participation coefficients """
-
-    # Normalize participation coeffients
-    norm_part_coeff = Design_Tools.norm_part_coeff(part_coeff)
 
     # Perform the steepest descent line search
     new_part_coeff, norm_new_part_coeff = Design_Tools.update_part_coeff(
@@ -146,7 +143,7 @@ class Design_Tools():
     return change_ratio
 
 
-  def get_scale_gradient(part_coeff, gradient):
+  def get_scale_gradient(part_coeff, norm_part_coeff, gradient, design_step):
     """ Get a scale factor which leads to small change (<0.1) of the molecule in the line search """
 
     # Calculate a scale factor of gradients in the line search
@@ -157,18 +154,21 @@ class Design_Tools():
 
       # Calculate a change ratio of normalized participation coefficients
       # by the linear search update
-      change_ratio = Design_Tools.calc_change_ratio(part_coeff, gradient, scale_gradient)
+      change_ratio = Design_Tools.calc_change_ratio(
+          part_coeff, norm_part_coeff, gradient, scale_gradient)
 
-      # If the change ratio of normalized participation coefficients is smaller than 0.1
-      if change_ratio <= 0.1:
+      # If the change ratio of normalized participation coefficients is smaller than 0.05
+      if change_ratio <= 0.05:
         break
 
     if i == 9999:
       raise ValueError("Gradients maybe too large and lead to large molecular change in the update.")
 
     # Write scale
-    with open("scale_gradient.dat", mode='w') as fh:
-      print("iteration,", i, ", scale factor,", scale_gradient, file=fh)
+    with open("scale_gradient.dat", mode='a') as fh:
+      print("design step: ", design_step, "iteration: ", i, "change ratio: ", change_ratio, file=fh)
+      print("design step: ", design_step, "iteration: ", i, "scale factor: ", scale_gradient, file=fh)
+      print("", file=fh)
 
     return scale_gradient
 
@@ -561,6 +561,8 @@ class Inverse_Design():
       # Remove an old results of the design
       if os.path.isfile('design_opt.dat'):
         os.remove('design_opt.dat')
+      if os.path.isfile('scale_gradient.dat'):
+        os.remove('scale_gradient.dat')
 
       # Save results of the design
       Inverse_Design.update_output(
@@ -638,8 +640,16 @@ class Inverse_Design():
 
 
       ### Update molecular species
+      # Get a scale factor for the gradient
+      if not flag_scale_gradient:
+        scale_factor_gradient = 1.0
+      else:
+        scale_factor_gradient = Design_Tools.get_scale_gradient(
+            part_coeff, norm_part_coeff, weight_design_property_gradient, w_opt_step + 1)
+
+      # Update participation coefficients and normalized ones
       part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
-          part_coeff, weight_design_property_gradient)
+          part_coeff, weight_design_property_gradient, scale_factor_gradient)
 
       # Save data for restarting design
       # design step, participation coefficients, molecular geometry
