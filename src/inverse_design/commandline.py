@@ -30,8 +30,8 @@ def stop_watch(func):
 def ignition_design():
   geom_coordinate, mol_target_list = iconf.Option.get_inputs()
   perturb_ampli, max_design_opt_iter, design_opt_criter = iconf.Option.get_input_params()
-  design_target_property, flag_design_restart, design_calc_level, flag_scale_gradient = \
-    iconf.Option.get_input_design()
+  design_target_property, flag_design_restart, design_calc_level, flag_scale_gradient, \
+    design_geom_optimizer = iconf.Option.get_input_design()
   if design_target_property == 'atomization_energy':
     free_atom_energies = iconf.Option.get_free_atom_energies(design_calc_level)
 
@@ -46,7 +46,7 @@ def ignition_design():
 
   derivatives.design(perturb_ampli, max_design_opt_iter,
                      design_opt_criter, flag_debug_design, flag_design_restart,
-                     flag_scale_gradient)
+                     flag_scale_gradient, design_geom_optimizer)
 
 
 @stop_watch

@@ -497,7 +497,7 @@ class Inverse_Design():
 
 
   def design(self, perturb_ampli, max_design_opt_iter, design_opt_criter, flag_debug_design, \
-    flag_design_restart, flag_scale_gradient):
+    flag_design_restart, flag_scale_gradient, design_geom_optimizer):
     """ Perform inverse design
 
     Args:
@@ -602,7 +602,7 @@ class Inverse_Design():
     for w_opt_step in range(init_w_opt_step, max_w_opt_step):
       # Note that self._mol_target_list[0] is not used in geometry optimization.
       self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
-          self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
+          self._mol_target_list[0], self._geom_coordinate, norm_part_coeff, design_geom_optimizer)
 
       ### Calculate properties
       # Read energies

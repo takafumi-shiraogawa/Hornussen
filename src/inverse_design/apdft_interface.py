@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import shutil
 from ase import Atoms
-# from ase.optimize import BFGS
+from ase.optimize import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
 import apdft as APDFTtool
 import apdft.ase.ase_apdft as APDFT
@@ -226,7 +226,7 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
 class ASE_OPT_Interface(ASE_OPT):
   """ APDFT-ASE geometry optimization interface of APDFT for Lime's inverse design. """
 
-  def imp_ase_opt(nuclear_numbers, coordinates, norm_part_coeff, fmax_au = 0.005):
+  def imp_ase_opt(nuclear_numbers, coordinates, norm_part_coeff, design_geom_optimizer, fmax_au = 0.005):
     """ Implement ASE geometry optimization.
 
     How to perform geometry optimization?
@@ -253,8 +253,12 @@ class ASE_OPT_Interface(ASE_OPT):
     if os.path.isfile('BFGSLineSearch.dat'):
       os.remove('BFGSLineSearch.dat')
 
-    # dyn = BFGS(MOL)
-    dyn = BFGSLineSearch(MOL, logfile="BFGSLineSearch.dat")
+    if design_geom_optimizer == "BFGSLineSearch":
+      dyn = BFGSLineSearch(MOL, logfile="BFGSLineSearch.dat")
+    elif design_geom_optimizer == "BFGS":
+      dyn = BFGS(MOL, logfile="BFGSLineSearch.dat")
+    else:
+      raise ValueError("design_geom_optimizer is invalid.")
     dyn.run(fmax=fmax_au * hb_to_ea)
 
     # Move the output of geometry optimization into the working directory.
