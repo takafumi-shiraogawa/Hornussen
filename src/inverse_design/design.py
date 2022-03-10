@@ -147,7 +147,7 @@ class Design_Tools():
     """ Get a scale factor which leads to small change (<0.1) of the molecule in the line search """
 
     # Calculate a scale factor of gradients in the line search
-    for i in range(10000):
+    for i in range(100000):
       # Set a scale factor of gradients in the line search
       # At first iteration, scale_gradient is 1.0.
       scale_gradient = 1.0 * (0.99 ** i)
@@ -158,7 +158,7 @@ class Design_Tools():
           part_coeff, norm_part_coeff, gradient, scale_gradient)
 
       # If the change ratio of normalized participation coefficients is smaller than 0.05
-      if change_ratio <= 0.05:
+      if change_ratio <= 0.01:
         break
 
     if i == 9999:
