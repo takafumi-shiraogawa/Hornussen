@@ -23,7 +23,7 @@ class analyze_design():
 
     data = open('extr_atom_energy.dat', mode='r')
 
-    count = 0
+    count = -1
 
     for row in data:
       count += 1
@@ -58,7 +58,7 @@ class analyze_design():
 
     data = open('extr_design_prop.dat', mode='r')
 
-    count = 0
+    count = -1
 
     for row in data:
       count += 1
