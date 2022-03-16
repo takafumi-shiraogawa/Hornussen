@@ -79,7 +79,7 @@ class analyze_design():
     range_x = [0, 400, 800, 1200]
     range_y = [-1000, -500, 0]
     lim_x = [-100, 1300]
-    lim_y = [-1000, -500, 0]
+    lim_y = [-1000, 0]
 
     pp.figure_proc.make_figure(step, pot_ene, label_data, label_x,
                             label_y, range_x, range_y, lim_x, lim_y, pic_name='opt_hist_pot_ene')
