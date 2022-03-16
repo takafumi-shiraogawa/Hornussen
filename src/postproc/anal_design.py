@@ -49,6 +49,40 @@ class analyze_design():
     pp.figure_proc.make_figure(step, atom_ene, label_data, label_x,
                             label_y, range_x, range_y, lim_x, lim_y, pic_name='opt_hist_atom_ene')
 
+  def make_figure_opt_hist_pot_ene():
+
+    # After extr_design_prop.sh
+
+    pot_ene = []
+    step = []
+
+    data = open('extr_design_prop.dat', mode='r')
+
+    count = 0
+
+    for row in data:
+      count += 1
+      step.append(count)
+
+      row = row.rstrip('\n').split()
+      pot_ene.append(float(row[0]))
+
+    data.close()
+
+    step = np.array(step)
+    atom_ene = np.array(atom_ene)
+
+    label_data = ['Potential energy']
+    label_x = 'Design step'
+    label_y = 'Potential energy / Hartree'
+
+    range_x = [0, 400, 800, 1200]
+    range_y = [-1000, -500, 0]
+    lim_x = [-100, 1300]
+    lim_y = [-1000, -500, 0]
+
+    pp.figure_proc.make_figure(step, atom_ene, label_data, label_x,
+                            label_y, range_x, range_y, lim_x, lim_y, pic_name='opt_hist_pot_ene')
 
   def make_figure_opt_hist_norm_part_coeff(num_target_mol):
 
