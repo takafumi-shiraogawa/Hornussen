@@ -97,9 +97,9 @@ class Option:
 
     try:
       design_geom_optimizer = lime_conf['design']['design_geom_optimizer']
-      if design_geom_optimizer not in ['BFGS', 'BFGSLineSearch']:
+      if design_geom_optimizer not in ['BFGS', 'BFGSLineSearch', 'STEEPEST_DESCENT']:
         raise ValueError(
-          "design_geom_optimizer must be BFGS or BFGSLineSearch in lime.conf."
+          "design_geom_optimizer must be BFGS or BFGSLineSearch or STEEPEST_DESCENT in lime.conf."
         )
     except:
       design_geom_optimizer = 'BFGSLineSearch'

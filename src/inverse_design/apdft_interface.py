@@ -8,6 +8,7 @@ from ase.optimize.bfgslinesearch import BFGSLineSearch
 import apdft as APDFTtool
 import apdft.ase.ase_apdft as APDFT
 from apdft.ase.ase_opt import ASE_OPT
+from apdft.ase.steepest_descent import STEEPEST_DESCENT
 import inverse_design.design as Inverse_Design
 
 
@@ -252,16 +253,27 @@ class ASE_OPT_Interface(ASE_OPT):
     # Remove an old results of geometry optimization
     if os.path.isfile('BFGSLineSearch.dat'):
       os.remove('BFGSLineSearch.dat')
+    if os.path.isfile('STEEPEST_DESCENT.dat'):
+      os.remove('STEEPEST_DESCENT.dat')
 
     if design_geom_optimizer == "BFGSLineSearch":
       dyn = BFGSLineSearch(MOL, logfile="BFGSLineSearch.dat")
     elif design_geom_optimizer == "BFGS":
       dyn = BFGS(MOL, logfile="BFGSLineSearch.dat")
+    elif design_geom_optimizer == "STEEPEST_DESCENT":
+      dyn = STEEPEST_DESCENT(MOL, logfile="STEEPEST_DESCENT.dat", maxstep=0.1)
     else:
       raise ValueError("design_geom_optimizer is invalid.")
     dyn.run(fmax=fmax_au * hb_to_ea)
 
     # Move the output of geometry optimization into the working directory.
-    shutil.move("BFGSLineSearch.dat", "./work/")
+    try:
+      shutil.move("BFGSLineSearch.dat", "./work/")
+    except:
+      pass
+    try:
+      shutil.move("STEEPEST_DESCENT.dat", "./work/")
+    except:
+      pass
 
     return MOL._get_positions()
