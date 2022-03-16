@@ -70,7 +70,7 @@ class analyze_design():
     data.close()
 
     step = np.array(step)
-    atom_ene = np.array(atom_ene)
+    pot_ene = np.array(pot_ene)
 
     label_data = ['Potential energy']
     label_x = 'Design step'
@@ -81,7 +81,7 @@ class analyze_design():
     lim_x = [-100, 1300]
     lim_y = [-1000, -500, 0]
 
-    pp.figure_proc.make_figure(step, atom_ene, label_data, label_x,
+    pp.figure_proc.make_figure(step, pot_ene, label_data, label_x,
                             label_y, range_x, range_y, lim_x, lim_y, pic_name='opt_hist_pot_ene')
 
   def make_figure_opt_hist_norm_part_coeff(num_target_mol):
