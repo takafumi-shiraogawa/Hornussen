@@ -257,9 +257,9 @@ class ASE_OPT_Interface(ASE_OPT):
       os.remove('STEEPEST_DESCENT.dat')
 
     if design_geom_optimizer == "BFGSLineSearch":
-      dyn = BFGSLineSearch(MOL, logfile="BFGSLineSearch.dat")
+      dyn = BFGSLineSearch(MOL, logfile="BFGSLineSearch.dat", maxstep=0.1)
     elif design_geom_optimizer == "BFGS":
-      dyn = BFGS(MOL, logfile="BFGSLineSearch.dat")
+      dyn = BFGS(MOL, logfile="BFGSLineSearch.dat", maxstep=0.1)
     elif design_geom_optimizer == "STEEPEST_DESCENT":
       dyn = STEEPEST_DESCENT(MOL, logfile="STEEPEST_DESCENT.dat", maxstep=0.1)
     else:
