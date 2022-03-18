@@ -678,7 +678,7 @@ class Inverse_Design():
 
       # Perform geometry optimization
       self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
-          self._mol_target_list[0], self._geom_coordinate, norm_part_coeff)
+          self._mol_target_list[0], self._geom_coordinate, norm_part_coeff, design_geom_optimizer)
 
       # Read energies
       # Read atomic forces
