@@ -5,7 +5,7 @@ import shutil
 from ase import Atoms
 from ase.optimize import BFGS
 from ase.optimize.bfgslinesearch import BFGSLineSearch
-import apdft as APDFTtool
+# import apdft as APDFTtool
 import apdft.ase.ase_apdft as APDFT
 from apdft.ase.ase_opt import ASE_OPT
 from apdft.ase.steepest_descent import STEEPEST_DESCENT
