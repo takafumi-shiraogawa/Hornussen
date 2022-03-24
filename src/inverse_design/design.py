@@ -291,6 +291,14 @@ class Inverse_Design():
     return energies, atomic_forces, weight_energy, weight_atomic_forces
 
 
+  def get_energy_from_file(self, path):
+    # Read potential energies of target molecules
+    apdft_proc = APDFT_Proc(self._num_target_mol, self._num_atom)
+    energies = apdft_proc.read_potential_energies("%s/energies.csv" % path)
+
+    return energies
+
+
   def calc_atomization_energies_and_gradients(energies, sum_free_atom_energies, norm_part_coeff, part_coeff):
     """" Calculate atomization energies and its sign-inverted gradients """
     # Calculate atomization energies
@@ -537,8 +545,9 @@ class Inverse_Design():
     ### 3. Calculate weighted properties
     ### 3.1. Calculate weighted potential energy
     ### 3.2. Calculate weighted atomic forces
-    energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
-        self, '.', norm_part_coeff)
+    # energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+    #     self, '.', norm_part_coeff)
+    energies = self.get_energy_from_file('.')
 
     # If the target property to be designed is atomization energy
     if self._design_target_property == 'atomization_energy':
@@ -610,8 +619,9 @@ class Inverse_Design():
       # Calculate weighted properties
       # Calculate weighted potential energy
       # Calculate weighted atomic forces
-      energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
-          self, './work/temp', norm_part_coeff)
+      # energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+      #     self, './work/temp', norm_part_coeff)
+      energies = self.get_energy_from_file('./work/temp')
 
       # If the target property to be designed is atomization energy
       if self._design_target_property == 'atomization_energy':
@@ -685,8 +695,9 @@ class Inverse_Design():
       # Calculate weighted properties
       # Calculate weighted potential energy
       # Calculate weighted atomic forces
-      energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
-          self, './work/temp', norm_part_coeff)
+      # energies, atomic_forces, weight_energy, weight_atomic_forces = Inverse_Design.calc_weight_energy_and_atom_forces(
+      #     self, './work/temp', norm_part_coeff)
+      energies = self.get_energy_from_file('./work/temp')
 
       # If the target property to be designed is atomization energy
       if self._design_target_property == 'atomization_energy':
