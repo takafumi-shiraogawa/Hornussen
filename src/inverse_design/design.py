@@ -161,7 +161,7 @@ class Design_Tools():
       if change_ratio <= 0.01:
         break
 
-    if i == 9999:
+    if i == 99999:
       raise ValueError("Gradients maybe too large and lead to large molecular change in the update.")
 
     # Write scale
