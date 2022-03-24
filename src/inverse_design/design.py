@@ -186,7 +186,7 @@ class Design_Tools():
     weight_atomic_force = np.zeros((num_atom, 3))
     for i in range(num_atom):
       for j in range(3):
-        weight_atomic_force[i, j] = np.multiply(atomic_forces[:, i, j], norm_part_coeff).sum()
+        weight_atomic_force[i, j] = np.sum(np.multiply(atomic_forces[:, i, j], norm_part_coeff))
 
     return weight_atomic_force
 
