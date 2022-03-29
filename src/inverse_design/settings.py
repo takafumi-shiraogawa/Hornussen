@@ -104,6 +104,15 @@ class Option:
     except:
       design_geom_optimizer = 'BFGSLineSearch'
 
+    try:
+      design_method = lime_conf['design']['design_method']
+      if design_method not in ['standard', 'optimality_criteria']:
+        raise ValueError(
+          "design_method must be standard or optimality_criteria in lime.conf."
+        )
+    except:
+      design_method = 'standard'
+
     if design_target_property not in ['atomization_energy', 'total_energy']:
       raise ValueError(
           "design_target_property must be atomization_energy or total_energy in lime.conf.")
@@ -117,7 +126,8 @@ class Option:
     else:
       design_calc_level = None
 
-    return design_target_property, design_restart, design_calc_level, design_flag_scale_gradient, design_geom_optimizer
+    return design_target_property, design_restart, design_calc_level, \
+      design_flag_scale_gradient, design_geom_optimizer, design_method
 
 
   def get_free_atom_energies(design_calc_level):

@@ -45,18 +45,53 @@ class optimality_criteria():
   def update_variables(variables, scaled_variables):
     """ Update variables. """
     # Set allowable change in each variable
-    # This value is obtained from O. Sigmund, A 99 line topology optimization code
-    # written in Matlab, 2001.
-    allow_change = 0.2
+    # # This value is obtained from O. Sigmund, A 99 line topology optimization code
+    # # written in Matlab, 2001.
+    # allow_change = 0.2
+    allow_change = 0.01
+
+    new_variables = np.copy(variables)
 
     for i in range(len(variables)):
       if scaled_variables[i] <= max(0.0, variables[i] - allow_change):
-        variables[i] = max(0.0, variables[i] - allow_change)
+        new_variables[i] = max(0.0, variables[i] - allow_change)
       elif scaled_variables[i] >= min(1.0, variables[i] + allow_change):
-        variables[i] = min(1.0, variables[i] + allow_change)
+        new_variables[i] = min(1.0, variables[i] + allow_change)
       elif scaled_variables[i] > max(0.0, variables[i] - allow_change) and scaled_variables[i] < min(1.0, variables[i] + allow_change):
-        variables[i] = scaled_variables[i]
+        new_variables[i] = scaled_variables[i]
       else:
         raise Exception("Strange behavior!")
 
-    return variables
+    return new_variables
+
+
+  def do_optimality_criteria(norm_part_coeff, object_functions):
+    """ Perform optimality criteria update of variables
+    Args:
+      design_property: """
+    lagragian_min = 0.0
+    lagragian_max = 100000.0
+
+    while lagragian_max - lagragian_min > 0.0001:
+      lagragian_mid = 0.5 * (lagragian_max + lagragian_min)
+
+      # Calculate scale factors D for optimality criteria method
+      scale_factors_D = optimality_criteria.calc_scale_factor(
+          norm_part_coeff, object_functions, lagragian_mid, 1.0)
+
+      # Calculate scaled variables by the scale factors D with the damping coefficient
+      # in optimality criteria method
+      scaled_norm_part_coeff = optimality_criteria.calc_scaled_variables(
+          norm_part_coeff, scale_factors_D)
+
+      # Get updated variables
+      updated_norm_part_coeff = optimality_criteria.update_variables(
+          norm_part_coeff, scaled_norm_part_coeff)
+
+      # Update the bisection region
+      if np.sum(updated_norm_part_coeff) > 1.0:
+        lagragian_min = lagragian_mid
+      else:
+        lagragian_max = lagragian_mid
+
+    return updated_norm_part_coeff

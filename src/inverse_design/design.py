@@ -313,7 +313,7 @@ class Inverse_Design():
     weight_atomization_energy_gradient = Design_Tools.get_weight_property_gradient(
         atomization_energies, part_coeff)
 
-    return weight_atomization_energy, weight_atomization_energy_gradient
+    return weight_atomization_energy, weight_atomization_energy_gradient, atomization_energies
 
 
   def calc_total_energies_and_gradients(energies, norm_part_coeff, part_coeff):
@@ -488,7 +488,7 @@ class Inverse_Design():
         # Calculate atomization energies
         # Calculate weighted atomization energy
         # Calculate gradients of atomization energies with respect to participation coefficients
-        weight_atomization_energy, weight_atomization_energy_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+        weight_atomization_energy, weight_atomization_energy_gradient, atomization_energies = Inverse_Design.calc_atomization_energies_and_gradients(
             energies, self._sum_free_atom_energies, interp_norm_part_coeff, part_coeff)
 
       ### Save results
@@ -505,7 +505,7 @@ class Inverse_Design():
 
 
   def design(self, perturb_ampli, max_design_opt_iter, design_opt_criter, flag_debug_design, \
-    flag_design_restart, flag_scale_gradient, design_geom_optimizer):
+    flag_design_restart, flag_scale_gradient, design_geom_optimizer, design_method):
     """ Perform inverse design
 
     Args:
@@ -555,7 +555,7 @@ class Inverse_Design():
       ### 3.3. Calculate atomization energies
       ### 3.4. Calculate weighted atomization energy
       ### 3.5. Calculate gradients of atomization energies with respect to participation coefficients
-      weight_design_property, weight_design_property_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+      weight_design_property, weight_design_property_gradient, atomization_energies = Inverse_Design.calc_atomization_energies_and_gradients(
         energies, self._sum_free_atom_energies, norm_part_coeff, part_coeff)
 
     elif self._design_target_property == 'total_energy':
@@ -629,7 +629,7 @@ class Inverse_Design():
         # Calculate atomization energies
         # Calculate weighted atomization energy
         # Calculate gradients of atomization energies with respect to participation coefficients
-        weight_design_property, weight_design_property_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+        weight_design_property, weight_design_property_gradient, atomization_energies = Inverse_Design.calc_atomization_energies_and_gradients(
             energies, self._sum_free_atom_energies, norm_part_coeff, part_coeff)
 
       elif self._design_target_property == 'total_energy':
@@ -650,16 +650,28 @@ class Inverse_Design():
 
 
       ### Update molecular species
-      # Get a scale factor for the gradient
-      if not flag_scale_gradient:
-        scale_factor_gradient = 1.0
-      else:
-        scale_factor_gradient = Design_Tools.get_scale_gradient(
-            part_coeff, norm_part_coeff, weight_design_property_gradient, w_opt_step + 1)
+      if design_method == 'standard':
+        # Get a scale factor for the gradient
+        if not flag_scale_gradient:
+          scale_factor_gradient = 1.0
+        else:
+          scale_factor_gradient = Design_Tools.get_scale_gradient(
+              part_coeff, norm_part_coeff, weight_design_property_gradient, w_opt_step + 1)
 
-      # Update participation coefficients and normalized ones
-      part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
-          part_coeff, weight_design_property_gradient, scale_factor_gradient)
+        # Update participation coefficients and normalized ones
+        part_coeff, norm_part_coeff = Design_Tools.update_part_coeff(
+            part_coeff, weight_design_property_gradient, scale_factor_gradient)
+
+      elif design_method == 'optimality_criteria':
+        old_norm_part_coeff = np.copy(norm_part_coeff)
+        if self._design_target_property == 'atomization_energy':
+          norm_part_coeff = optimality_criteria.do_optimality_criteria(
+              norm_part_coeff, atomization_energies)
+
+        # TODO: energies are negative values. this method possibly does not work.
+        elif self._design_target_property == 'total_energy':
+          norm_part_coeff = optimality_criteria.do_optimality_criteria(
+              norm_part_coeff, energies)
 
       # Save data for restarting design
       # design step, participation coefficients, molecular geometry
@@ -667,9 +679,14 @@ class Inverse_Design():
 
 
       ### Convergence
-      if np.max(np.abs(weight_design_property_gradient)) < design_opt_criter:
-        flag_design_opt_conv = True
-        break
+      if design_method == 'standard':
+        if np.max(np.abs(weight_design_property_gradient)) < design_opt_criter:
+          flag_design_opt_conv = True
+          break
+      elif design_method == 'optimality_criteria':
+        if np.sum(np.abs(norm_part_coeff - old_norm_part_coeff)) < 0.01:
+          flag_design_opt_conv = True
+          break
 
       # Check
       if w_opt_step == max_w_opt_step - 1:
@@ -705,7 +722,7 @@ class Inverse_Design():
         # Calculate atomization energies
         # Calculate weighted atomization energy
         # Calculate gradients of atomization energies with respect to participation coefficients
-        weight_design_property, weight_design_property_gradient = Inverse_Design.calc_atomization_energies_and_gradients(
+        weight_design_property, weight_design_property_gradient, atomization_energies = Inverse_Design.calc_atomization_energies_and_gradients(
             energies, self._sum_free_atom_energies, norm_part_coeff, norm_part_coeff)
 
       elif self._design_target_property == 'total_energy':
