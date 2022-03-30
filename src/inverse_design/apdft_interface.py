@@ -83,6 +83,22 @@ class APDFT_Proc():
 
     return atomic_forces
 
+  def read_ele_dipoles(self, path_ele_dipoles):
+    """ Read atomic forces of target molecules
+    Args:
+      path_atomic_forces  : A string of path of APDFT atomic forces, e.g., /home/test/ver_atomic_forces.csv
+    Returns:
+      atomic_forces       : A (the number of molecules, the number of atoms, 3) array of atomic forces of target molecules. [Hartree / Bohr]
+    """
+    ele_dipole_moments = np.zeros((self._num_mol, 3))
+    for didx, dim in enumerate('xyz'):
+      file_ele_dipole_moments = open(path_ele_dipoles, "r")
+      dict_ele_dipole_moments = csv.DictReader(file_ele_dipole_moments)
+      ele_dipole_moments[:, didx] = get_property_values(
+          "dipole_moment_%s" % (str(dim)), dict_ele_dipole_moments, self._num_mol)
+      file_ele_dipole_moments.close()
+
+    return ele_dipole_moments
 
 class ASE_APDFT_Interface(APDFT.mod_APDFT):
   """ APDFT-ASE calculators interface of APDFT for Lime's inverse design. """
@@ -167,6 +183,11 @@ class ASE_APDFT_Interface(APDFT.mod_APDFT):
 
     # Copy ver_atomic_forces.csv
     copyfile = "./geom_opt_hist/geom_opt-%s/temp/ver_atomic_forces.csv" % str(
+        last_geom_opt_num)
+    shutil.copy(copyfile, copy_directory)
+
+    # Copy dipoles.csv
+    copyfile = "./geom_opt_hist/geom_opt-%s/temp/dipoles.csv" % str(
         last_geom_opt_num)
     shutil.copy(copyfile, copy_directory)
 

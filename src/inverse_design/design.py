@@ -299,6 +299,14 @@ class Inverse_Design():
     return energies
 
 
+  def get_ele_dipole_from_file(self, path):
+    # Read electric dipoles of target molecules
+    apdft_proc = APDFT_Proc(self._num_target_mol, self._num_atom)
+    ele_dipoles = apdft_proc.read_ele_dipoles("%s/dipoles.csv" % path)
+
+    return ele_dipoles
+
+
   def calc_atomization_energies_and_gradients(energies, sum_free_atom_energies, norm_part_coeff, part_coeff):
     """" Calculate atomization energies and its sign-inverted gradients """
     # Calculate atomization energies
@@ -566,6 +574,12 @@ class Inverse_Design():
       weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
         energies, norm_part_coeff, part_coeff)
 
+    elif self._design_target_property == 'ele_dipole':
+      ele_dipoles = self.get_ele_dipole_from_file('.')
+      str_ele_dipoles = np.linalg.norm(ele_dipoles, axis=1)
+      weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
+        str_ele_dipoles, norm_part_coeff, part_coeff)
+
     if not flag_design_restart:
       # Remove an old results of the design
       if os.path.isfile('design_opt.dat'):
@@ -640,6 +654,12 @@ class Inverse_Design():
         weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
           energies, norm_part_coeff, part_coeff)
 
+      elif self._design_target_property == 'ele_dipole':
+        ele_dipoles = self.get_ele_dipole_from_file('./work/temp')
+        str_ele_dipoles = np.linalg.norm(ele_dipoles, axis=1)
+        weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
+          str_ele_dipoles, norm_part_coeff, part_coeff)
+
       ### Save results
       # Save work/ for geometry optimization
       Geom_OPT_Tools.save_geom_opt_hist(w_opt_step + 1)
@@ -672,6 +692,13 @@ class Inverse_Design():
         elif self._design_target_property == 'total_energy':
           norm_part_coeff = optimality_criteria.do_optimality_criteria(
               norm_part_coeff, energies)
+
+        elif self._design_target_property == 'ele_dipole':
+          # Here True is for minimization of the strength of the electric dipole
+          # moment. If we specify False, it is a design of a molecule with
+          # the dipole moment with the large strength.
+          norm_part_coeff = optimality_criteria.do_optimality_criteria(
+              norm_part_coeff, str_ele_dipoles, False)
 
       # Save data for restarting design
       # design step, participation coefficients, molecular geometry
@@ -732,6 +759,12 @@ class Inverse_Design():
         # Calculate gradients of total energies with respect to participation coefficients
         weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
           energies, norm_part_coeff, part_coeff)
+
+      elif self._design_target_property == 'ele_dipole':
+        ele_dipoles = self.get_ele_dipole_from_file('./work/temp')
+        str_ele_dipoles = np.linalg.norm(ele_dipoles, axis=1)
+        weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
+          str_ele_dipoles, norm_part_coeff, part_coeff)
 
       # Save work/ for geometry optimization
       Geom_OPT_Tools.save_geom_opt_hist('real')

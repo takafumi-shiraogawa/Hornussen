@@ -21,7 +21,7 @@ class line_searcher():
 class optimality_criteria():
   """ Perform optimality criteria method. """
 
-  def calc_scale_factor(variables, object_functions, multiplier, penalty_factor):
+  def calc_scale_factor(variables, object_functions, multiplier, penalty_factor, inversion = False):
     """ Calculate scale factor D
     Args:
       variables        : A N array of variables.
@@ -31,7 +31,10 @@ class optimality_criteria():
     Returns:
       A N array of the scale factor D.
     """
-    return np.multiply(variables ** (penalty_factor - 1.0), object_functions) * penalty_factor / multiplier
+    if not inversion:
+      return np.multiply(variables ** (penalty_factor - 1.0), object_functions) * penalty_factor / multiplier
+    else:
+      return np.multiply(variables ** (penalty_factor - 1.0), (np.reciprocal(object_functions) + 0.1)) * penalty_factor / multiplier
 
 
   def calc_scaled_variables(variables, scale_factors_D, damp_factor = 0.5):
@@ -65,7 +68,7 @@ class optimality_criteria():
     return new_variables
 
 
-  def do_optimality_criteria(norm_part_coeff, object_functions):
+  def do_optimality_criteria(norm_part_coeff, object_functions, inversion = False):
     """ Perform optimality criteria update of variables
     Args:
       design_property: """
@@ -77,7 +80,7 @@ class optimality_criteria():
 
       # Calculate scale factors D for optimality criteria method
       scale_factors_D = optimality_criteria.calc_scale_factor(
-          norm_part_coeff, object_functions, lagragian_mid, 1.0)
+          norm_part_coeff, object_functions, lagragian_mid, 1.0, inversion)
 
       # Calculate scaled variables by the scale factors D with the damping coefficient
       # in optimality criteria method

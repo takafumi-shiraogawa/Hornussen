@@ -113,9 +113,9 @@ class Option:
     except:
       design_method = 'standard'
 
-    if design_target_property not in ['atomization_energy', 'total_energy']:
+    if design_target_property not in ['atomization_energy', 'total_energy', 'ele_dipole']:
       raise ValueError(
-          "design_target_property must be atomization_energy or total_energy in lime.conf.")
+          "design_target_property must be atomization_energy or total_energy or ele_dipole in lime.conf.")
 
     if design_target_property == 'atomization_energy':
       try:

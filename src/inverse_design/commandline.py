@@ -40,7 +40,7 @@ def ignition_design():
   if design_target_property == 'atomization_energy':
     derivatives = ds.Inverse_Design(
         geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
-  elif design_target_property == 'total_energy':
+  elif design_target_property == 'total_energy' or design_target_property == 'ele_dipole':
     derivatives = ds.Inverse_Design(
         geom_coordinate, mol_target_list, design_target_property)
 
