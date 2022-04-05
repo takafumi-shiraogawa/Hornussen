@@ -421,7 +421,7 @@ class Inverse_Design():
     return design_step, np.array(part_coeff), np.array(coordinates)
 
 
-  def interpolation(self, idx_two_mols, type_interp, geom_opt, num_div = 10):
+  def interpolation(self, idx_two_mols, type_interp, geom_opt, design_geom_optimizer, num_div = 10):
     """ Perform interpolation between two real molecules.
 
     Args:
@@ -475,7 +475,7 @@ class Inverse_Design():
       if geom_opt:
         # Perform geometry optimization
         self._geom_coordinate = ASE_OPT_Interface.imp_ase_opt(
-            self._mol_target_list[0], self._geom_coordinate, interp_norm_part_coeff)
+            self._mol_target_list[0], self._geom_coordinate, interp_norm_part_coeff, design_geom_optimizer)
 
       ### Calculate properties
       # Read energies

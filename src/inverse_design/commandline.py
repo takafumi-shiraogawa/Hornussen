@@ -51,10 +51,17 @@ def ignition_design():
 
 @stop_watch
 def ignition_interpolation(idx_two_mol, type_interp, geom_opt, num_div):
-  geom_coordinate, mol_target_list, free_atom_energies = iconf.Option.get_inputs()
-  design_target_property, design_restart = iconf.Option.get_input_design()
+  geom_coordinate, mol_target_list = iconf.Option.get_inputs()
+  design_target_property, flag_design_restart, design_calc_level, flag_scale_gradient, \
+    design_geom_optimizer, design_method = iconf.Option.get_input_design()
+  if design_target_property == 'atomization_energy':
+    free_atom_energies = iconf.Option.get_free_atom_energies(design_calc_level)
 
-  derivatives = ds.Inverse_Design(
-      geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
+  if design_target_property == 'atomization_energy':
+    derivatives = ds.Inverse_Design(
+        geom_coordinate, mol_target_list, design_target_property, free_atom_energies)
+  elif design_target_property == 'total_energy' or design_target_property == 'ele_dipole':
+    derivatives = ds.Inverse_Design(
+        geom_coordinate, mol_target_list, design_target_property)
 
-  derivatives.interpolation(idx_two_mol, type_interp, geom_opt, num_div)
+  derivatives.interpolation(idx_two_mol, type_interp, geom_opt, design_geom_optimizer, num_div)
