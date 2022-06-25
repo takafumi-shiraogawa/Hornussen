@@ -3,7 +3,7 @@ Usage
 
 Usage of Lime is described.
 
-Last update: Feb. 15, 2022
+Last update: June 25, 2022
 
 Inputs & Outputs
 -------------------
@@ -133,3 +133,16 @@ Design
                                  modified APDFT.
 
 2. Generate participation coefficients and normalized participation coefficients
+
+
+How to run efficient calculations?
+-------------------
+  Current version of Lime may need some code modulations
+
+  1. If reading guess is needed, change pyscf2.py in APDFT/src/apdft/calculator/templates.
+  2. Move required CSV files.
+  3. Intra-node parallerization APDFT: flag_ap_smp = True for APDFT calculations in physics.py in APDFT/src/apdft.
+  4. Inter-node parallerization of QM: set num_mpi_proc in ase_apdft.py in APDFT/src/apdft/ase.
+  5. Remove profiler options of cli.py in APDFT/src
+  6. Prepare lime.conf
+  7. Prepare apdft.conf
