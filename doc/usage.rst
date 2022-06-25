@@ -146,3 +146,5 @@ How to run efficient calculations?
   5. Remove profiler options of cli.py in APDFT/src
   6. Prepare lime.conf
   7. Prepare apdft.conf
+
+  3 can not be used for general property design with optimality criteria.
