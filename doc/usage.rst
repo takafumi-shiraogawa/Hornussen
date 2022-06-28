@@ -3,7 +3,7 @@ Usage
 
 Usage of Lime is described.
 
-Last update: June 25, 2022
+Last update: June 28, 2022
 
 Inputs & Outputs
 -------------------
@@ -148,3 +148,13 @@ How to run efficient calculations?
   7. Prepare apdft.conf
 
   3 can not be used for general property design with optimality criteria.
+
+
+Applicability
+-------------------
+  In lime.conf
+  design_method: standard or optimality_criteria
+  design_target_property: atomization_energy, total_energy, or ele_dipole
+    TODO: energies are negative values. this method possibly does not work for optimality critria.
+
+  Only single equilibrium geometry can be predicted and accounted in the target properties.
