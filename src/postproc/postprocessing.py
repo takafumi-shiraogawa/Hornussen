@@ -72,4 +72,4 @@ class figure_proc():
       plt.xlim(lim_x)
       plt.ylim(lim_y)
 
-    plt.savefig("%s.png" % pic_name)
+    plt.savefig("%s.pdf" % pic_name, format='pdf', dpi=900)
