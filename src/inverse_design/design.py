@@ -452,11 +452,13 @@ class Inverse_Design():
     if type_interp == 'w':
       part_coeff_mol1 = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[0])
       part_coeff_mol2 = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[1])
-    else:
+    elif type_interp == 'a':
       part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[0])
       norm_part_coeff_mol1 = Design_Tools.norm_part_coeff(part_coeff)
       part_coeff = Design_Tools.gener_local_part_coeff(self._num_target_mol, idx_two_mols[1])
       norm_part_coeff_mol2 = Design_Tools.norm_part_coeff(part_coeff)
+    else:
+      raise NotImplementedError("Interpolation type should be 'w' or 'a'.")
 
     change = 1.0 / num_div
 
