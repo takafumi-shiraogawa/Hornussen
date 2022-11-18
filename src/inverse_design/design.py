@@ -496,8 +496,22 @@ class Inverse_Design():
         # Calculate atomization energies
         # Calculate weighted atomization energy
         # Calculate gradients of atomization energies with respect to participation coefficients
-        weight_atomization_energy, weight_atomization_energy_gradient, atomization_energies = Inverse_Design.calc_atomization_energies_and_gradients(
+        weight_design_property, weight_design_property_gradient, atomization_energies = Inverse_Design.calc_atomization_energies_and_gradients(
             energies, self._sum_free_atom_energies, interp_norm_part_coeff, part_coeff)
+
+      elif self._design_target_property == 'total_energy':
+
+        # Calculate total energies
+        # Calculate weighted total energy
+        # Calculate gradients of total energies with respect to participation coefficients
+        weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
+          energies, interp_norm_part_coeff, part_coeff)
+
+      elif self._design_target_property == 'ele_dipole':
+        ele_dipoles = self.get_ele_dipole_from_file(path_inputs)
+        str_ele_dipoles = np.linalg.norm(ele_dipoles, axis=1)
+        weight_design_property, weight_design_property_gradient = Inverse_Design.calc_total_energies_and_gradients(
+          str_ele_dipoles, interp_norm_part_coeff, part_coeff)
 
       ### Save results
       if geom_opt:
@@ -506,7 +520,7 @@ class Inverse_Design():
 
       # Save results of the design
       Inverse_Design.update_output(self, idx_num_div + 1, interp_norm_part_coeff,
-                                   weight_atomization_energy, 'interpolation.dat')
+                                   weight_design_property, 'interpolation.dat')
 
     if geom_opt:
       shutil.rmtree("work/")
