@@ -727,9 +727,18 @@ class Inverse_Design():
           flag_design_opt_conv = True
           break
       elif design_method == 'optimality_criteria':
-        if np.sum(np.abs(norm_part_coeff - old_norm_part_coeff)) < 0.01:
-          flag_design_opt_conv = True
-          break
+        # In the initial 11 steps, the design does not terminate.
+        if w_opt_step == 0:
+          criter_file = open(file='criter.dat', mode='a')
+        print(w_opt_step, np.sum(np.abs(norm_part_coeff - old_norm_part_coeff)), file=criter_file)
+        if w_opt_step > 10:
+          if np.sum(np.abs(norm_part_coeff - old_norm_part_coeff)) < 0.01:
+            flag_design_opt_conv = True
+            break
+
+        # if np.sum(np.abs(norm_part_coeff - old_norm_part_coeff)) < 0.01:
+        #   flag_design_opt_conv = True
+        #   break
 
       # Check
       if w_opt_step == max_w_opt_step - 1:
