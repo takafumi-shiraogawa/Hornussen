@@ -156,6 +156,5 @@ Applicability
   In lime.conf
   design_method: standard or optimality_criteria
   design_target_property: atomization_energy, total_energy, or ele_dipole
-    TODO: energies are negative values. this method possibly does not work for optimality critria.
 
   Only single equilibrium geometry can be predicted and accounted in the target properties.
