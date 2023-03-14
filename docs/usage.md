@@ -4,12 +4,12 @@ Usage
 Usage of Lime is described.  
 This document is being updated.
 
-Last update: June 28, 2022
+Last update: March 14, 2023
+
+<br/>
 
 Inputs & Outputs
 -------------------
-
-
 ### Inputs:
   lime.conf  
   energies.csv  
@@ -23,42 +23,47 @@ Inputs & Outputs
 
 **inputs/**  
   *.xyz : specified by lime.conf  
-  target_molecules.inp : specified by lime.conf
+  target_molecules.inp : specified by lime.conf  
+
+<br/>
 
 ### Outputs:
   design_opt.dat  
   elapsed_time.dat  
   geom_opt_hist/  
 
+<br/>
 
 Restart option
 -------------------
 
-The following outputs of the terminated design should be retained:
-  design_opt.dat
-  restart_design.dat
-  geom_opt_hist/
+The following outputs of the terminated design should be retained:  
+  design_opt.dat  
+  restart_design.dat  
+  geom_opt_hist/  
 
+<br/>
 
 Flowchart
 -------------------
 
-1. Preprocessing
-  1.1. Get a list of target molecules (target_molecules.inp) by modified APDFT.
+1. Preprocessing  
+  1.1. Get a list of target molecules (target_molecules.inp) by modified APDFT.  
   1.2. Get a stable geometry by performing a geometry optimization of
-       the reference molecule by electronic structure theory to be used in modified APDFT.
+       the reference molecule by electronic structure theory to be used in modified APDFT.  
 
-2. Design
+2. Design  
   2.1. Get weighted potential energy (and weighted atomic forces) by performing
-       a modified APDFT calculation.
-  2.2. Perturb participation coefficients.
+       a modified APDFT calculation.  
+  2.2. Perturbed participation coefficients.  
   2.3.1. Get a stable geometry and potential energies at the end of a geometry optimization
-         using a modified APDFT calculation.
+         using a modified APDFT calculation.  
   2.3.2. Get weight potential energies and derivative of objective function with respect to
-         participation coefficients.
-  2.3.3. Update participation coefficients.
-  2.3.4. Back to 2.3.1.
+         participation coefficients.  
+  2.3.3. Update participation coefficients.  
+  2.3.4. Back to 2.3.1.  
 
+<br/>
 
 Preprocessing
 -------------------
@@ -67,18 +72,19 @@ Preprocessing
 
 2. Specify target molecules in chemical space.
 
-  In apdft.conf,
+  In apdft.conf,  
     apdft_maxdz,  
     conf.apdft_specifytargets,  
     conf.apdft_targetatom,  
     conf.apdft_targetpositions,  
     apdft_readtargetpath  
   should be specified.  
+
   We can get target molecules which do not have equivalent molecules.  
   This strategy does not affect the number of QM calculations.  
   To reduce the number of QM calculations, some developments are needed.
 
-  apdft.conf
+  apdft.conf  
     apdft_includeonly      : it specifies mutated atoms.  
     apdft_maxdz            : for accurate calculations, it should be
                              the number of mutated atoms.
@@ -109,19 +115,13 @@ Preprocessing
   apdft_targetpositions = 0,1,2,3,4,5  
   apdft_readtargetpath = None  
 
-  Note for further developments:  
-    If apdft_targetpositions does not cover all the atoms of a reference molecule,
-    the number of QM calculations is larger than the required ones.
-    It may be possible to use apdft_includeonly to specify atoms to be mutated,
-    which affects target molecules and QM calculations, to reduce the cost.
-    However, the "energies_geometries" mode does not correspond to "apdft_includeonly".
-
 3. Make an output target_molecules.inp of a list of target molecules which do not have
    equivalent molecules.
 
 4. Perform geometry optimization of a reference molecule by using an electronic structure
    method which will be combined with APDFT and make mol.xyz with optimized geometry.
 
+<br/>
 
 Design
 -------------------
@@ -136,6 +136,7 @@ Design
 
 2. Generate participation coefficients and normalized participation coefficients
 
+<br/>
 
 How to run efficient calculations?
 -------------------
@@ -143,7 +144,7 @@ How to run efficient calculations?
 
   1. If reading guess is needed, change pyscf2.py in APDFT/src/apdft/calculator/templates.
   2. Move required CSV files.
-  3. Intra-node parallerization APDFT: flag_ap_smp = True for APDFT calculations in physics.py in APDFT/src/apdft.
+  3. Intra-node parallerization of APDFT: flag_ap_smp = True for APDFT calculations in physics.py in APDFT/src/apdft.
   4. Inter-node parallerization of QM: set num_mpi_proc in ase_apdft.py in APDFT/src/apdft/ase.
   5. Remove profiler options of cli.py in APDFT/src
   6. Prepare lime.conf
@@ -151,6 +152,7 @@ How to run efficient calculations?
 
   3 can not be used for general property design with optimality criteria.
 
+<br/>
 
 Applicability
 -------------------
@@ -158,4 +160,4 @@ Applicability
   design_method: standard or optimality_criteria
   design_target_property: atomization_energy, total_energy, or ele_dipole
 
-  Only single equilibrium geometry can be predicted and accounted in the target properties.
+  Only single equilibrium geometry can be predicted and accounted in the target properties in the current version.
