@@ -1,6 +1,6 @@
 # Usage
 
-Code structure of Lime is described.  
+Code structure of fleche is described.  
 This document is being updated.
 
 <br/>

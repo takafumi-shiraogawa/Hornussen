@@ -1,9 +1,9 @@
 # Usage
 
-Usage of Lime is described.  
+Usage of fleche is described.  
 This document is being updated.
 
-Last update: March 14, 2023
+Last update: March 15, 2023
 
 <br/>
 
@@ -118,7 +118,7 @@ The following outputs of the terminated design should be retained:
 
 ## How to run efficient calculations?
 
-  Current version of Lime may need some code modulations
+  Current version of fleche may need some code modulations
 
   1. If reading guess is needed, change pyscf2.py in APDFT/src/apdft/calculator/templates.
   2. Move required CSV files.
