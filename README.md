@@ -1,11 +1,10 @@
 # Lime
 
-A code for developing inverse molecular design methods that explore chemical space to find functional molecules in equilibrium geometries.
+###  A code for developing inverse molecular design methods that explore chemical space to find functional molecules in equilibrium geometries
 
 <br/>
-<br/>
 
-# Literature
+## Related Literature
 
 Paper | Title
 ------|--------------
