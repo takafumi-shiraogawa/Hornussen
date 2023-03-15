@@ -9,7 +9,8 @@ class line_searcher():
     """ Calculates updated variables.
 		Args:
 			variable          : A N array of variables
-      gradient          : A N array of derivatives of objective function with respect to given variables
+      gradient          : A N array of derivatives of objective function with respect to
+                          given variables
 			grad_scale_factor : A scale factor of gradients
 		Returns:
 			next_variable : A N array of updated variables
