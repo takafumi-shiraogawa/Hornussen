@@ -1,5 +1,4 @@
-Usage
-===
+# Usage
 
 Usage of Lime is described.  
 This document is being updated.
@@ -8,8 +7,8 @@ Last update: March 14, 2023
 
 <br/>
 
-Inputs & Outputs
--------------------
+## Inputs & Outputs
+
 ### Inputs:
   lime.conf  
   energies.csv  
@@ -34,8 +33,7 @@ Inputs & Outputs
 
 <br/>
 
-Restart option
--------------------
+## Restart option
 
 The following outputs of the terminated design should be retained:  
   design_opt.dat  
@@ -44,34 +42,11 @@ The following outputs of the terminated design should be retained:
 
 <br/>
 
-Flowchart
--------------------
-
-1. Preprocessing  
-  1.1. Get a list of target molecules (target_molecules.inp) by modified APDFT.  
-  1.2. Get a stable geometry by performing a geometry optimization of
-       the reference molecule by electronic structure theory to be used in modified APDFT.  
-
-2. Design  
-  2.1. Get weighted potential energy (and weighted atomic forces) by performing
-       a modified APDFT calculation.  
-  2.2. Perturbed participation coefficients.  
-  2.3.1. Get a stable geometry and potential energies at the end of a geometry optimization
-         using a modified APDFT calculation.  
-  2.3.2. Get weight potential energies and derivative of objective function with respect to
-         participation coefficients.  
-  2.3.3. Update participation coefficients.  
-  2.3.4. Back to 2.3.1.  
-
-<br/>
-
-Preprocessing
--------------------
+## Preprocessing
 
 1. Prepare *.xyz for initial molecular geometry of a reference molecule.
 
-2. Specify target molecules in chemical space.
-
+2. Specify target molecules in chemical space.  
   In apdft.conf,  
     apdft_maxdz,  
     conf.apdft_specifytargets,  
@@ -123,28 +98,32 @@ Preprocessing
 
 <br/>
 
-Design
--------------------
+## Design
 
-1. Read inputs
-  All inputs of Lime is read by using a configuration file, lime.conf.
-    design_init_mol_geom_path  : path including the file name for an initial molecular geometry,
-                                 e.g., /home/test/benzene.xyz
-    design_target_mol_path     : path including the file name for a list of target molecules,
-                                 e.g., /home/test/target_molecules.inp. It can be generated using
-                                 modified APDFT.
+1. Read inputs  
+  All inputs of Lime is read by using a configuration file, lime.conf.  
+    design_init_mol_geom_path  : path including the file name for an initial
+    molecular geometry,  
+    e.g., /home/test/benzene.xyz  
+    design_target_mol_path     : path including the file name for a list of
+    target molecules,  
+    e.g., /home/test/target_molecules.inp.  
+    It can be generated using modified APDFT.
 
 2. Generate participation coefficients and normalized participation coefficients
 
+3. ...
+
 <br/>
 
-How to run efficient calculations?
--------------------
+## How to run efficient calculations?
+
   Current version of Lime may need some code modulations
 
   1. If reading guess is needed, change pyscf2.py in APDFT/src/apdft/calculator/templates.
   2. Move required CSV files.
-  3. Intra-node parallerization of APDFT: flag_ap_smp = True for APDFT calculations in physics.py in APDFT/src/apdft.
+  3. Intra-node parallerization of APDFT: flag_ap_smp = True for APDFT
+     calculations in physics.py in APDFT/src/apdft.
   4. Inter-node parallerization of QM: set num_mpi_proc in ase_apdft.py in APDFT/src/apdft/ase.
   5. Remove profiler options of cli.py in APDFT/src
   6. Prepare lime.conf
@@ -154,10 +133,11 @@ How to run efficient calculations?
 
 <br/>
 
-Applicability
--------------------
+## Applicability
+
   In lime.conf
   design_method: standard or optimality_criteria
   design_target_property: atomization_energy, total_energy, or ele_dipole
 
-  Only single equilibrium geometry can be predicted and accounted in the target properties in the current version.
+  Only single equilibrium geometry can be predicted and accounted in the target
+  properties in the current version.
