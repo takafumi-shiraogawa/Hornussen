@@ -1,6 +1,6 @@
 # Usage
 
-Code structure of fleche is described.  
+Code structure of Fleche is described.  
 This document is being updated.
 
 <br/>
