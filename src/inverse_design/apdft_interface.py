@@ -9,8 +9,7 @@ from ase.optimize.bfgslinesearch import BFGSLineSearch
 import apdft.ase.ase_apdft as APDFT
 from apdft.ase.ase_opt import ASE_OPT
 from apdft.ase.steepest_descent import STEEPEST_DESCENT
-import inverse_design.design as Inverse_Design
-
+from . import design as Inverse_Design
 
 # Conversion factor from Angstrom to Bohr
 ang_to_bohr = 1 / 0.52917721067
