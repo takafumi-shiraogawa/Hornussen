@@ -1,3 +1,10 @@
+import os
+os.environ["OPENBLAS_NUM_THREADS"]="1"
+os.environ["MKL_NUM_THREADS"]="1"
+os.environ["OMP_NUM_THREADS"]="1"
+os.environ["VECLIB_NUM_THREADS"]="1"
+os.environ["NUMEXPR_NUM_THREADS"]="1"
+
 import numpy as np
 import numpy
 import pyscf
@@ -14,7 +21,7 @@ angstrom = 1 / 0.52917721067
 # Set information on a reference molecule
 mol = pyscf.gto.Mole()
 mol.atom = "7 0.000000000000000 0.000000000000000 -0.001000000000000;7 0.000000000000000 0.000000000000000 1.100000000000000"
-mol.basis = {7: '#----------------------------------------------------------------------\n# Basis Set Exchange\n# Version v0.8.13\n# https://www.basissetexchange.org\n#----------------------------------------------------------------------\n#   Basis set: def2-TZVP\n# Description: def2-TZVP\n#        Role: orbital\n#     Version: 1  (Data from Turbomole 7.3)\n#----------------------------------------------------------------------\n\n\nBASIS "ao basis" PRINT\n#BASIS SET: (11s,6p,2d,1f) -> [5s,3p,2d,1f]\nN    S\n  19730.8006470              0.21887984991E-03\n   2957.8958745              0.16960708803E-02\n    673.22133595             0.87954603538E-02\n    190.68249494             0.35359382605E-01\n     62.295441898            0.11095789217\n     22.654161182            0.24982972552\nN    S\n      8.9791477428           0.40623896148\n      3.6863002370           0.24338217176\nN    S\n      0.84660076805          1.0000000\nN    S\n      0.33647133771          1.0000000\nN    S\n      0.13647653675          1.0000000\nN    P\n     49.200380510            0.55552416751E-02\n     11.346790537            0.38052379723E-01\n      3.4273972411           0.14953671029\n      1.1785525134           0.34949305230\nN    P\n      0.41642204972           .45843153697\nN    P\n      0.14260826011           .24428771672\nN    D\n      1.65400000             1.0000000\nN    D\n      0.46900000             1.0000000\nN    F\n      1.09300000             1.0000000\nEND\n'}
+mol.basis = {7: '#----------------------------------------------------------------------\n# Basis Set Exchange\n# Version v0.9\n# https://www.basissetexchange.org\n#----------------------------------------------------------------------\n#   Basis set: def2-TZVP\n# Description: def2-TZVP\n#        Role: orbital\n#     Version: 1  (Data from Turbomole 7.3)\n#----------------------------------------------------------------------\n\n\nBASIS "ao basis" SPHERICAL PRINT\n#BASIS SET: (11s,6p,2d,1f) -> [5s,3p,2d,1f]\nN    S\n  19730.8006470              0.21887984991E-03\n   2957.8958745              0.16960708803E-02\n    673.22133595             0.87954603538E-02\n    190.68249494             0.35359382605E-01\n     62.295441898            0.11095789217\n     22.654161182            0.24982972552\nN    S\n      8.9791477428           0.40623896148\n      3.6863002370           0.24338217176\nN    S\n      0.84660076805          1.0000000\nN    S\n      0.33647133771          1.0000000\nN    S\n      0.13647653675          1.0000000\nN    P\n     49.200380510            0.55552416751E-02\n     11.346790537            0.38052379723E-01\n      3.4273972411           0.14953671029\n      1.1785525134           0.34949305230\nN    P\n      0.41642204972           .45843153697\nN    P\n      0.14260826011           .24428771672\nN    D\n      1.65400000             1.0000000\nN    D\n      0.46900000             1.0000000\nN    F\n      1.09300000             1.0000000\nEND\n'}
 mol.verbose = 0
 mol.build()
 
@@ -35,9 +42,9 @@ all_mol.spin = 1
 all_mol.build()
 
 # Set a quantum chemical computation method
-# Only CCSD or HF is allowed.
+# "CCSD", "HF", "PBE", "PBE0", and "B3LYP" are allowed.
 method = "CCSD"
-if method not in ["CCSD", "HF"]:
+if method not in ["CCSD", "HF", "PBE", "PBE0", "B3LYP"]:
     raise NotImplementedError("Method %s not supported." % method)
 
 deltaZ = np.array((-0.05,0.0))
@@ -60,68 +67,166 @@ def add_qmmm(calc, mol, deltaZ):
 
 
 if method == "HF":
-    # Set SCF calculation condition
-    calc = add_qmmm(pyscf.scf.RHF(mol), mol, deltaZ)
-    # kernel() function is the simple way to call HF driver.
-    # verbose is the output level.
-    hfe = calc.kernel(verbose=0)
-    # One-particle density matrix in AO representation:
-    # MO occupation number
-    # * MO coefficients
-    # * conjugated MO coefficients
-    dm1_ao = calc.make_rdm1()
-    total_energy = calc.e_tot
-    # Calculate nuclear-nuclear repulsion energy of
-    # of the reference molecule and
-    # Enn = calc.energy_nuc()
-    # of the target molecular geometry
-    # target_Enn = target_mol.energy_nuc()
+    # If this is *NOT* a calculation of the reference molecule,
+    # calculate analytical gradients.
+    if (np.count_nonzero(deltaZ) != 0) or (mol.atom != original_mol.atom) or (target_mol.atom != original_mol.atom):
+        # Set SCF calculation condition
+        calc = add_qmmm(pyscf.scf.RHF(mol), mol, deltaZ)
+        # kernel() function is the simple way to call HF driver.
+        # verbose is the output level.
+        calc.max_cycle = 1000
+        calc.kernel(verbose=0)
+        # One-particle density matrix in AO representation:
+        # MO occupation number
+        # * MO coefficients
+        # * conjugated MO coefficients
+        dm1_ao = calc.make_rdm1()
+        total_energy = calc.e_tot
+        # Calculate nuclear-nuclear repulsion energy of
+        # of the reference molecule and
+        # Enn = calc.energy_nuc()
+        # of the target molecular geometry
+        # target_Enn = target_mol.energy_nuc()
 
     # If this is a calculation of the reference molecule,
     # calculate analytical gradients.
-    # TODO: modulate this routine since this procedure performs HF twice
-    #       in HF and mycc.
-    # TODO: here the last condition is redundant, and modification is possible
-    if np.count_nonzero(deltaZ) == 0 and mol.atom == original_mol.atom \
-        and target_mol.atom == original_mol.atom:
+    # TODO: analytical gradient calculation is performed regardless of a configuration of APDFT;
+    #       that is, for the purpose of energy calculations, it is redundant and should be removed.
+    else:
         # Because this calculation does not use QM/MM, standard HF can be used instead.
-        mf_scf = pyscf.scf.RHF(mol).run()
-        grad_scf = pyscf.grad.RHF(mf_scf).kernel()
+        mf_scf = pyscf.scf.RHF(mol)
+        mf_scf.max_cycle = 1000
+        mf_scf.run()
+        dm1_ao = mf_scf.make_rdm1()
+        total_energy = mf_scf.e_tot
+
+        mf_scf_grad = mf_scf.nuc_grad_method()
+        grad_scf = mf_scf_grad.kernel()
 
         for site in includeonly:
             # derivative of total energy
             print("REFERENCE_ENERGY_DERIVATIVE", site, *grad_scf[site])
 
 if method == "CCSD":
-    calc = add_qmmm(pyscf.scf.RHF(mol), mol, deltaZ)
-    hfe = calc.kernel(verbose=0)
-    mycc = pyscf.cc.CCSD(calc).run()
-    # Unrelaxed density matrix is evaluated in the MO basis
-    dm1 = mycc.make_rdm1()
-    # Convert the density matrix into the AO basis
-    dm1_ao = np.einsum("pi,ij,qj->pq", calc.mo_coeff, dm1, calc.mo_coeff.conj())
-    total_energy = mycc.e_tot
-    # Calculate nuclear-nuclear repulsion energy of
-    # of the reference molecule and
-    # Enn = calc.energy_nuc()
-    # of the target molecular geometry
-    # target_Enn = target_mol.energy_nuc()
+    # If this is *NOT* a calculation of the reference molecule,
+    # calculate analytical gradients.
+    if (np.count_nonzero(deltaZ) != 0) or (mol.atom != original_mol.atom) or (target_mol.atom != original_mol.atom):
+        calc = add_qmmm(pyscf.scf.RHF(mol), mol, deltaZ)
+        calc.max_cycle = 1000
+
+        # # High accuracy
+        # calc.direct_scf = False
+        # calc.conv_tol = 1e-13
+
+        calc.kernel(verbose=0)
+        mycc = pyscf.cc.CCSD(calc).run()
+
+        # # High accuracy
+        # mycc = pyscf.cc.CCSD(calc)
+        # mycc.conv_tol = 1.e-11
+        # mycc.conv_tol_normt = 1.e-10
+        # mycc.run()
+
+        # Unrelaxed density matrix is evaluated in the MO basis
+        dm1 = mycc.make_rdm1()
+        # Convert the density matrix into the AO basis
+        dm1_ao = np.einsum("pi,ij,qj->pq", calc.mo_coeff, dm1, calc.mo_coeff.conj())
+        total_energy = mycc.e_tot
+        # Calculate nuclear-nuclear repulsion energy of
+        # of the reference molecule and
+        # Enn = calc.energy_nuc()
+        # of the target molecular geometry
+        # target_Enn = target_mol.energy_nuc()
 
     # If this is a calculation of the reference molecule,
     # calculate analytical gradients.
-    # TODO: modulate this routine since this procedure performs CCSD twice
-    #       in cc_scanner and mycc.
-    # TODO: here the last condition is redundant, and modification is possible
-    if np.count_nonzero(deltaZ) == 0 and mol.atom == original_mol.atom \
-        and target_mol.atom == original_mol.atom:
-        # Because this calculation does not use QM/MM, standard HF can be used instead.
-        cc_scanner = pyscf.cc.CCSD(pyscf.scf.RHF(
-            mol)).nuc_grad_method().as_scanner()
-        e_tot_cc_scanner, grad_cc_scanner = cc_scanner(mol)
+    # TODO: analytical gradient calculation is performed regardless of a configuration of APDFT;
+    #       that is, for the purpose of energy calculations, it is redundant and should be removed.
+    else:
+        hfe = pyscf.scf.RHF(mol)
+        hfe.max_cycle = 1000
+
+        # # High accuracy
+        # hfe.direct_scf = False
+        # hfe.conv_tol = 1e-13
+
+        hfe.kernel(verbose=0)
+        mycc = pyscf.cc.CCSD(hfe)
+
+        # # High accuracy
+        # mycc.conv_tol = 1.e-11
+        # mycc.conv_tol_normt = 1.e-10
+
+        # Perform a CC calculation
+        mycc.run()
+        # Unrelaxed density matrix is evaluated in the MO basis
+        dm1 = mycc.make_rdm1()
+        # Convert the density matrix into the AO basis
+        dm1_ao = np.einsum("pi,ij,qj->pq", hfe.mo_coeff, dm1, hfe.mo_coeff.conj())
+        # Get total energy
+        total_energy = mycc.e_tot
+
+        # Perform a CC analytical gradient calculation and get the gradient
+        mycc_grad = mycc.nuc_grad_method()
+        grad = mycc_grad().kernel()
+
+        # Print gradient
+        for site in includeonly:
+            # derivative of total energy
+            print("REFERENCE_ENERGY_DERIVATIVE", site, *grad[site])
+
+if method in ["PBE", "PBE0", "B3LYP"]:
+    # If this is *NOT* a calculation of the reference molecule,
+    # calculate analytical gradients.
+    if (np.count_nonzero(deltaZ) != 0) or (mol.atom != original_mol.atom) or (target_mol.atom != original_mol.atom):
+        # Set SCF calculation condition
+        calc = add_qmmm(pyscf.scf.RKS(mol), mol, deltaZ)
+        # kernel() function is the simple way to call HF driver.
+        # verbose is the output level.
+        calc.max_cycle = 1000
+        if method == "PBE":
+            calc.xc = 'pbe,pbe'
+        elif method == "PBE0":
+            calc.xc = 'pbe0'
+        elif method == "B3LYP":
+            calc.xc = 'b3lyp'
+        calc.kernel(verbose=0)
+        # One-particle density matrix in AO representation:
+        # MO occupation number
+        # * MO coefficients
+        # * conjugated MO coefficients
+        dm1_ao = calc.make_rdm1()
+        total_energy = calc.e_tot
+        # Calculate nuclear-nuclear repulsion energy of
+        # of the reference molecule and
+        # Enn = calc.energy_nuc()
+        # of the target molecular geometry
+        # target_Enn = target_mol.energy_nuc()
+
+    # If this is a calculation of the reference molecule,
+    # calculate analytical gradients.
+    # TODO: analytical gradient calculation is performed regardless of a configuration of APDFT;
+    #       that is, for the purpose of energy calculations, it is redundant and should be removed.
+    else:
+        # Because this calculation does not use QM/MM, standard kS-DFT can be used instead.
+        mf_scf = pyscf.scf.RKS(mol)
+        mf_scf.max_cycle = 1000
+        if method == "PBE":
+            mf_scf.xc = 'pbe,pbe'
+        elif method == "PBE0":
+            mf_scf.xc = 'pbe0'
+        elif method == "B3LYP":
+            mf_scf.xc = 'b3lyp'
+        mf_scf.run()
+        dm1_ao = mf_scf.make_rdm1()
+        total_energy = mf_scf.e_tot
+
+        mf_scf_grad = mf_scf.nuc_grad_method()
+        grad_scf = mf_scf_grad.kernel()
 
         for site in includeonly:
             # derivative of total energy
-            print("REFERENCE_ENERGY_DERIVATIVE", site, *grad_cc_scanner[site])
+            print("REFERENCE_ENERGY_DERIVATIVE", site, *grad_scf[site])
 
 # GRIDLESS, as things should be ############################
 # Total energy of SCF run
