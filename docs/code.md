@@ -1,15 +1,15 @@
 # Usage
 
 Code structure of Fleche is described.  
-This document is being updated.
+This document has been updated.
 
 <br/>
 
 ## Structure
 
-commandline.py  
-settings.py  
-design.py
+- commandline.py  
+- settings.py  
+- design.py
 
 <br/>
 
