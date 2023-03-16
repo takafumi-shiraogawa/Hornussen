@@ -1,0 +1,10 @@
+%mem = 10GB
+%nproc = 6
+# hf/def2tzvp opt freq nosymm
+
+7 7
+
+0 1
+7 0.0 0.0 0.0
+7 0.0 0.0 1.1
+
