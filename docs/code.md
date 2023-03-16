@@ -1,7 +1,7 @@
 # Usage
 
 Code structure of Fleche is described.  
-This document has been updated.
+This document is being updated.
 
 <br/>
 
