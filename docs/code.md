@@ -1,6 +1,6 @@
 # Usage
 
-Code structure of Fleche is described.  
+Code structure of Hornussen is described.  
 This document is being updated.
 
 <br/>
