@@ -1,6 +1,6 @@
 # Hornussen
 
-A code for developing inverse molecular design methods that explore chemical space to find functional molecules in equilibrium geometries
+Implementation of inverse molecular design that explore chemical space to find functional molecules in equilibrium geometries
 
 <br/>
 
