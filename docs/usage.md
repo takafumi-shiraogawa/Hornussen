@@ -129,7 +129,10 @@ The following outputs of the terminated design should be retained:
 
   In lime.conf
   - design_method: standard or optimality_criteria
-  - design_target_property: atomization_energy, total_energy, or ele_dipole
+  - design_target_property: atomization_energy, total_energy, or ele_dipole  
+    - Atomization energy (atomization_energy) is maximized  
+    - Total energy (total_energy) is minimized  
+    - Electrictric dipole strength (ele_dipole) is maximized
 
   Only single equilibrium geometry can be predicted and accounted in the target
   properties in the current version.
