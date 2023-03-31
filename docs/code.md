@@ -1,4 +1,4 @@
-# Usage
+# Code
 
 Code structure of Hornussen is described.  
 This document is being updated.
