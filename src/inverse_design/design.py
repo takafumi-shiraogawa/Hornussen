@@ -704,10 +704,9 @@ class Inverse_Design():
           norm_part_coeff = optimality_criteria.do_optimality_criteria(
               norm_part_coeff, atomization_energies)
 
-        # TODO: energies are negative values. this method possibly does not work.
         elif self._design_target_property == 'total_energy':
           norm_part_coeff = optimality_criteria.do_optimality_criteria(
-              norm_part_coeff, energies)
+              norm_part_coeff, -energies)
 
         elif self._design_target_property == 'ele_dipole':
           # Here True is for minimization of the strength of the electric dipole
