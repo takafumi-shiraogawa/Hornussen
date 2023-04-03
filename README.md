@@ -1,6 +1,6 @@
 # Hornussen
 
-Implementation of inverse molecular design that explore chemical space to find functional molecules in equilibrium geometries
+Implementation of inverse molecular design that explores chemical space to find functional molecules in equilibrium geometries
 
 <br/>
 
